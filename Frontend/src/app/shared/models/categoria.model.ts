@@ -6,7 +6,7 @@ export interface Categoria {
   id: string; // Alias for id_categoria for frontend compatibility
   nombre: string;
   descripcion?: string;
-  activa: boolean; // Status field
+  activa: boolean; // Status field 
   fecha_creacion: string;
   fecha_edicion?: string;
 }
