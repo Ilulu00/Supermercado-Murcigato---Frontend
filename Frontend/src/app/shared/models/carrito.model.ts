@@ -4,7 +4,6 @@
 
 export interface Carrito{
     id_carrito: string; //Este es el uuid
-    id: string; //Segun, para la compatibilidad con el frontend del id_carrito
     id_usuario: string; //Este es el uuid del usuario al q le pertence el carrito
     activo: boolean;
     fecha_crea: string;

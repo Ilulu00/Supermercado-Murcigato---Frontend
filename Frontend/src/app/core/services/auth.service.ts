@@ -25,7 +25,7 @@ export interface User {
   fecha_edicion?: string;
 }
 
-export type UserRole = 'admin' | 'consumidor';
+export type UserRole = 'admin' | 'cliente';
 
 @Injectable({
   providedIn: 'root'
@@ -109,7 +109,7 @@ export class AuthService {
     console.log('AuthService: Guardando datos del usuario:', loginResponse);
     localStorage.setItem(this.TOKEN_KEY, loginResponse.clave);
     localStorage.setItem(this.USER_KEY, JSON.stringify(loginResponse.nombre_usuario));
-    localStorage.setItem(this.ROLE_KEY, loginResponse.nombre_usuario.es_admin ? 'admin' : 'consumidor');
+    localStorage.setItem(this.ROLE_KEY, loginResponse.nombre_usuario.es_admin ? 'admin' : 'cliente');
     this.currentUserSubject.next(loginResponse.nombre_usuario);
     console.log('AuthService: Datos guardados en localStorage');
     console.log('Token:', localStorage.getItem(this.TOKEN_KEY));
@@ -137,7 +137,7 @@ export class AuthService {
    */
   getUserRole(): UserRole | null {
     const user = this.getCurrentUser();
-    return user?.es_admin ? 'admin' : 'consumidor';
+    return user?.es_admin ? 'admin' : 'cliente';
   }
 
   /**
@@ -175,7 +175,7 @@ export class AuthService {
     if (role === 'admin') return true;
 
     // Consumidor solo puede acceder a productos
-    if (role === 'consumidor') {
+    if (role === 'cliente') {
       return route === 'productos' || route === 'dashboard';
     }
 
