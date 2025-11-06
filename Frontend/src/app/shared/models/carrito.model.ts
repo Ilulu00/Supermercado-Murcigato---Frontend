@@ -44,6 +44,15 @@ export interface Detalle_carritoFilters{
     id_detalle?: string;
 }
 
+export interface CarritoConDetalles{
+    id_detalle: string; //Este es el uuid del detalle
+    id_carrito: string;
+    id_producto: string;
+    cantidad: number;
+    detalles?: []
+
+}
+
 /**
  * Modelo para respuesta paginada de carritos y detalles_carritos
  */
