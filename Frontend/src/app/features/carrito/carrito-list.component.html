@@ -77,11 +77,9 @@
               </td>
               <td>{{ carrito.fecha_crea | date:'short' }}</td>
               <td>
-                <!--
-                <button class="btn btn-sm btn-primary me-1" (click)="editCarrito(carrito)">
+                <button class="btn btn-sm btn-primary me-1" (click)="editCarritoYDetalles(carrito)">
                   Editar
                 </button>
-                -->
                 <button class="btn btn-sm btn-warning me-1" (click)="desactivarCarrito(carrito)" *ngIf="carrito.activo">
                   Desactivar
                 </button>

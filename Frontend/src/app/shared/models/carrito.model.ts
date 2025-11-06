@@ -15,6 +15,7 @@ export interface Detalle_carrito{
     id_carrito: string;
     id_producto: string;
     cantidad: number;
+    precio_producto: number;
 }
 
 export interface CreateCarritoRequest{
@@ -45,12 +46,15 @@ export interface Detalle_carritoFilters{
 }
 
 export interface CarritoConDetalles{
-    id_detalle: string; //Este es el uuid del detalle
     id_carrito: string;
+    id_usuario: string;
+    id_detalle: string; //Este es el uuid del detalle
     id_producto: string;
     cantidad: number;
-    detalles?: []
-
+    detalles?: Detalle_carrito[];   
+    activo: boolean;
+    fecha_crea: string;
+    fecha_actual?: string;
 }
 
 /**

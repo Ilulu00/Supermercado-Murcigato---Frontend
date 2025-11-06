@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationParams } from '../../core/models/api-response.model';
 import { CarritoService } from '../../core/services/carrito.service';
-import { CarritoConDetalles, CarritoFilters } from '../../shared/models/carrito.model';
+import { CarritoConDetalles, CarritoFilters, UpdateDetalle_carritoRequest } from '../../shared/models/carrito.model';
 
 @Component({
     selector: 'app-carrito-list',
@@ -24,7 +24,7 @@ export class CarritoListComponent implements OnInit {
 
     //Al parecer son propiedades de los modales
     showModal = false;
-    createCarrito: CarritoConDetalles | null = null;
+    editingCarrito: CarritoConDetalles | null = null;
     carritoForm: FormGroup;
 
     constructor(
@@ -33,7 +33,9 @@ export class CarritoListComponent implements OnInit {
     ) {      this.carritoForm = this.fb.group({
             id_usuario: [''],
             activo: [true],
-            detalles: this.fb.array([])
+            detalles: this.fb.array([
+
+            ]) as FormArray
         });
     }
     
@@ -42,7 +44,7 @@ export class CarritoListComponent implements OnInit {
     }
 
     get detalles(): FormArray {
-        return this.carritoForm.get('detalles') as FormArray
+        return this.carritoForm.get('detalles') as FormArray<FormGroup>;
     }
 
     loadCarrito() {
@@ -52,7 +54,7 @@ export class CarritoListComponent implements OnInit {
             limit: this.pageSize 
         };
 
-        this.carritoService.getCarritos(this.filters).subscribe({
+        this.carritoService.getCarritos(pagination, this.filters).subscribe({
             next: (carritos) => {
                 this.carritos = carritos;
                 this.loading = false;
@@ -64,16 +66,96 @@ export class CarritoListComponent implements OnInit {
                 console.log('Backend no disponible, se usaran datos mock para carrito. Perdone las moelstias');
                 this.carritos = [{
                     id_carrito: 'afea1-fafaf4-f1dnu-q2wsf5',
+                    id_usuario: '28edjj-afoje2-afiqf2-fofq1',
                     id_detalle: '13ews3-13esfh7-3sa-f1f321',
                     id_producto: 'faf095-495jf-40fkla0-013',
                     cantidad: 5,
-                }]
+                    activo: true,
+                    fecha_crea: new Date().toISOString(),
+                    fecha_actual: new Date().toISOString()
+                }];
+                this.totalPages = 1;
             }
+            this.loading = false;
         }
-    })
+    });
+    }
+
+    onfilterChange(): void{
+        this.currentPage = 1;
+        this.loadCarrito();
+    }
+
+    clearFilters(): void{
+        this.filters = {};
+        this.currentPage = 1;
+        this.loadCarrito();
+    }
+
+    goToPage(page: number): void {
+        if(page >= 1 && page <= this.totalPages) {
+            this.currentPage = page;
+            this.loadCarrito();
+        }
+    }
+
+    openCreateModal(): void {
+        this.editingCarrito = null;
+        this.carritoForm.reset({
+            id_detalle: '',
+            id_producto: '',
+            cantidad: 0
+        });
+        this.showModal = true;
+    }
+
+    editCarritoYDetalles(CarritoYDetalles: CarritoConDetalles): void {
+        this.editingCarrito = CarritoYDetalles;
+        this.carritoForm.patchValue({
+            id_usuario: CarritoYDetalles.id_usuario,
+            activo: CarritoYDetalles.activo
+        });
+        this.detalles.clear();
+        CarritoYDetalles.detalles?.forEach(det =>{
+            this.detalles.push(
+                this.fb.group({
+                    id_producto: [det.id_producto],
+                    cantidad: [det.cantidad],
+                    precio: [det.precio_producto]
+                })
+            );
+        });
+        this.showModal = true;
+    }
+
+    closeModal(): void {
+        this.showModal = false;
+        this.carritoForm.markAllAsTouched();
+        return;
+    }
+
+    saveCarrito(): void {
+        if(this.carritoForm.invalid) {
+            this.carritoForm.markAllAsTouched();
+            return;
+        }
+
+        const formValue = this.carritoForm.value;
+
+        if (this.editingCarrito) {
+            //actualizar los detalles del producto
+            const updateData: UpdateDetalle_carritoRequest = {
+                id_producto: formValue.id_producto,
+                cantidad: formValue.cantidad
+            };
+        }
 
 
 
-    
-}
+}          
+
+
+
+
+
 }

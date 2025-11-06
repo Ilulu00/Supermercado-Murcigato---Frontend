@@ -3,6 +3,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PaginationParams } from '../../core/models/api-response.model';
 import {
     Carrito,
     CarritoConDetalles,
@@ -19,9 +20,9 @@ export class CarritoService{
 
     constructor(private apiService: ApiService) { }
 
-    getCarritos(filters?: CarritoFilters):
+    getCarritos(pagination: PaginationParams, filters?: CarritoFilters):
     Observable<CarritoConDetalles[]> {
-        return this.apiService.get<CarritoConDetalles[]>(this.endpoint, filters);
+        return this.apiService.getPaginated<CarritoConDetalles>(this.endpoint, pagination, filters);
     }
 
     getCarritoById(id_carrito: string): Observable<Detalle_carrito> {
