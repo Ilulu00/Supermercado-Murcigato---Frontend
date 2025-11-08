@@ -57,6 +57,7 @@ export class CarritoService{
     updateDetalle_carrito(id_detalle: string, detalle: UpdateDetalle_carritoRequest): Observable<Detalle_carrito>{
         return this.apiService.put<Detalle_carrito>(`${this.detalleEndpoint}/${id_detalle}`, detalle)
     }
+    
 }
 
 

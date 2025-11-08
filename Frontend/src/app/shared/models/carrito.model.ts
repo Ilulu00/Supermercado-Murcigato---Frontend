@@ -20,6 +20,7 @@ export interface Detalle_carrito{
 
 export interface CreateCarritoRequest{
     id_usuario: string;
+    activo: boolean;
 }
 
 export interface CreateDetalle_carritoRequest{

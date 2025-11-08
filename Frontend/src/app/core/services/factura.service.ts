@@ -21,7 +21,7 @@ export class FacturaService {
         return this.apiService.getPaginated<Factura>(this.facturaEndpoint, pagination, filters)
     }
 
-    createFactura(factura: CreateFactura): Observable<Factura> {
+    generateFactura(factura: CreateFactura): Observable<Factura> {
         return this.apiService.post<Factura>(this.facturaEndpoint, factura)
     }
 

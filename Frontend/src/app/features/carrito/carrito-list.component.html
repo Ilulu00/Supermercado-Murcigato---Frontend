@@ -83,6 +83,13 @@
                 <button class="btn btn-sm btn-warning me-1" (click)="desactivarCarrito(carrito)" *ngIf="carrito.activo">
                   Desactivar
                 </button>
+
+                  <button 
+                    *ngIf="carrito.activo" 
+                    class="btn btn-sm btn-success me-1" 
+                    (click)="pagarCarrito(carrito)">
+                      Pagar 
+                  </button>
               </td>
             </tr>
           </tbody>
@@ -117,7 +124,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ createCarrito ? 'Nuevo Carrito de compras' : 'Crear su carrito' }}</h5>
+          <h5 class="modal-title">{{ editingCarrito ? 'Editar Carrito' : 'Nuevo Carrito' }}</h5>
           <button type="button" class="close" (click)="closeModal()">
             <span>&times;</span>
           </button>
@@ -133,15 +140,20 @@
                         class="detalle-item border rounded p-2 mb-2"
                     >
                         <label>Producto:</label>
-                        <input type="number" class="form-control" formControlName="id_producto" />
+                        <select class="form-control" formControlName="id_producto">
+                          <option value="" disabled selected>Seleccione un producto: </option>
+                          <option *ngFor="let p of productos" [value]="p.id_producto">
+                            {{ p.nombre_producto }}
+                          </option>
+                        </select>
 
-                        <label>Cantidad:</label>
+                        <label>Cantidad: </label>
                         <input type="number" class="form-control" formControlName="cantidad" />
 
-                        <label>Precio:</label>
-                        <input type="number" class="form-control" formControlName="precio" />
+                        <label>Precio: </label>
+                        <input type="number" class="form-control" formControlName="precio_producto" />
 
-                        <button type="button" class="btn btn-danger btn-sm mt-2" (click)="removeDetalle(i)">
+                        <button type="button" class="btn btn-danger btn-sm mt-2" (click)="eliminarDetalle(i)">
                             Eliminar
                         </button>
                     </div>
@@ -156,7 +168,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
             <button type="submit" class="btn btn-primary">
-                {{ createCarrito ? 'Guardar carrito' : 'Actualizar' }}
+                {{ editingCarrito ? 'Actualizar' : 'Guardar carrito' }}
             </button>
         </div>
        </form>
