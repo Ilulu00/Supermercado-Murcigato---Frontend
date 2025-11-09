@@ -3,9 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationParams } from '../../core/models/api-response.model';
 import { CarritoService } from '../../core/services/carrito.service';
+import { FacturaService } from '../../core/services/factura.service';
+import { ProductoService } from '../../core/services/producto.service';
 import { CarritoConDetalles, CarritoFilters, CreateCarritoRequest, UpdateDetalle_carritoRequest } from '../../shared/models/carrito.model';
-import {CreateFactura, Factura} from '../../shared/models/factura.model';
-import {FacturaService} from '../../core/services/factura.service';
+import { CreateFactura } from '../../shared/models/factura.model';
+import { Producto } from '../../shared/models/producto.model';
 
 @Component({
     selector: 'app-carrito-list',
@@ -21,6 +23,7 @@ export class CarritoListComponent implements OnInit {
     currentPage = 1; 
     totalPages = 1;
     pageSize = 10;
+    productos: Producto[] = [];
 
     filters: CarritoFilters = {};
 
@@ -32,18 +35,21 @@ export class CarritoListComponent implements OnInit {
     constructor(
         private carritoService: CarritoService,
         private facturaService: FacturaService,
+        private productoService: ProductoService,
         private fb: FormBuilder
     ) {      this.carritoForm = this.fb.group({
             id_usuario: [''],
             activo: [true],
             detalles: this.fb.array([
-
             ]) as FormArray
         });
     }
     
     ngOnInit(): void {
         this.loadCarritos();
+       /**  this.productoService.getProductos().subscribe(data => {
+            this.productos = data;
+        });*/
     }
 
     get detalles(): FormArray {
@@ -125,7 +131,8 @@ export class CarritoListComponent implements OnInit {
                     id_producto: [det.id_producto],
                     id_detalle: [det.id_detalle],
                     cantidad: [det.cantidad],
-                    precio: [det.precio_producto]
+                    precio_producto: [det.precio_producto],
+                    subtotal: [det.cantidad * det.precio_producto]
                 })
             );
         });
@@ -195,8 +202,42 @@ export class CarritoListComponent implements OnInit {
         }
     }
 
+    updateSubtotal(index: number): void {
+        const detalleForm = this.detalles.at(index);
 
+        const cantidad = detalleForm.get('cantidad')?.value || 0;
+        const precio = detalleForm.get('precio_producto')?.value || 0;
 
+        const subtotal = cantidad * precio;
+
+        detalleForm.patchValue({ subtotal });
+    }
+
+    agregarDetalle(): void {
+        this.detalles.push(
+            this.fb.group({
+                id_producto: [''],
+                cantidad: [1],
+                precio_producto: [0],
+                subtotal: [0]
+            })
+        )
+    }
+
+/*    onSelectProducto(index: number): void {
+        const detalleForm = this.detalles.at(index);
+
+        const id_producto = detalleForm.get('id_producto')?.value;
+        const productoSeleccionado = this.productos.find(p => p.id_producto === id_producto);
+
+        if (productoSeleccionado) {
+            detalleForm.patchValue({
+                precio_producto: productoSeleccionado.precio_producto
+            });
+            this.updateSubtotal(index); 
+        }
+    }
+*/
     desactivarCarrito(carrito: CarritoConDetalles): void {
         this.carritoService.disableCarrito(carrito.id_carrito).subscribe({
             next: () => {
@@ -209,7 +250,7 @@ export class CarritoListComponent implements OnInit {
         });
     }
 
-   /** pagarCarrito(carrito: CarritoConDetalles): void {
+    pagarCarrito(carrito: CarritoConDetalles): void {
         const nuevaFactura: CreateFactura = {
             id_carrito: String(carrito.id_carrito),
             id_usuario: String(carrito.id_usuario), 
@@ -232,7 +273,7 @@ export class CarritoListComponent implements OnInit {
             }
         });
     }
- */ /**Esto es porq no esta listo, esta malisimo xD */
+
 
 }          
 

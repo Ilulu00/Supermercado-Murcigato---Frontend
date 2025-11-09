@@ -17,7 +17,7 @@
               class="form-control" 
               placeholder="Buscar por ID..."
               [(ngModel)]="filters.id_carrito"
-              (input)="onFilterChange()"
+              (input)="onfilterChange()"
             >
           </div>
           <div class="col-md-3">
@@ -26,14 +26,14 @@
               class="form-control" 
               placeholder="Buscar por usuario..."
               [(ngModel)]="filters.id_usuario"
-              (input)="onFilterChange()"
+              (input)="onfilterChange()"
             >
           </div>
           <div class="col-md-2">
             <select 
               class="form-control" 
               [(ngModel)]="filters.activo"
-              (change)="onFilterChange()"
+              (change)="onfilterChange()"
             >
               <option value="">Todos los estados</option>
               <option value="true">Activos</option>
@@ -137,10 +137,10 @@
                     <div
                         *ngFor="let detalle of detalles.controls; let i = index"
                         [formGroupName]="i"
-                        class="detalle-item border rounded p-2 mb-2"
+                        class="detalle-item border rounded p-2 mb-2" 
                     >
                         <label>Producto:</label>
-                        <select class="form-control" formControlName="id_producto">
+                        <select class="form-control" formControlName="id_producto" (change)="onSelectProducto(i)">
                           <option value="" disabled selected>Seleccione un producto: </option>
                           <option *ngFor="let p of productos" [value]="p.id_producto">
                             {{ p.nombre_producto }}
@@ -151,14 +151,18 @@
                         <input type="number" class="form-control" formControlName="cantidad" />
 
                         <label>Precio: </label>
-                        <input type="number" class="form-control" formControlName="precio_producto" />
+                        <input type="number" class="form-control" formControlName="precio_producto" (input)="updateSubtotal(i)"/>
+
+                        <label>Subtotal:</label>
+                        <input type="number" class="form-control" formControlName="subtotal" readonly />
+
 
                         <button type="button" class="btn btn-danger btn-sm mt-2" (click)="eliminarDetalle(i)">
                             Eliminar
                         </button>
                     </div>
 
-                    <button type="button" class="btn btn-success mt-3" (click)="addDetalle()">
+                    <button type="button" class="btn btn-success mt-3" (click)="agregarDetalle()">
                         + Agregar producto
                     </button>
                     

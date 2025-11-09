@@ -32,6 +32,11 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes').then(m => m.authRoutes)
   },
   {
+    path: '/carrito',
+    loadComponent: () => import('./features/carrito/carrito-list.component').then(m => m.CarritoListComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/auth/login'
   }

@@ -38,6 +38,7 @@ export interface UpdateDetalle_carritoRequest{
  * Modelos para los filtros en carrito y detalle_carrito
  */
 export interface CarritoFilters {
+    id_carrito?: string;
   id_usuario?: string;
   activo?: boolean; // Status filter
 }
