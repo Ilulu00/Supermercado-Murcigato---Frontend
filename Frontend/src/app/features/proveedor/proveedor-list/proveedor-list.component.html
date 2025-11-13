@@ -1,0 +1,137 @@
+<div class="proveedor-list">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Gestión de Proveedores</h2>
+      <button class="btn btn-success" (click)="openCreateModal()">
+        Nuevo Proveedor
+      </button>
+    </div>
+
+    <div class="card-body">
+      <!-- Filtros -->
+      <div class="filters mb-3">
+        <div class="row">
+          <div class="col-md-4">
+            <input type="text" class="form-control" placeholder="Buscar por correo..." [(ngModel)]="filters.correo"
+              (input)="onFilterChange()">
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-secondary" (click)="clearFilters()">
+              Limpiar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de proveedores -->
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Primer Nombre</th>
+              <th>Segundo Nombre</th>
+              <th>Primer Apellido</th>
+              <th>Segundo Apellido</th>
+              <th>Teléfono</th>
+              <th>Correo</th>
+              <th>Fecha Creación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="loading">
+              <td colspan="6" class="text-center">Cargando...</td>
+            </tr>
+            <tr *ngIf="!loading && proveedores.length === 0">
+              <td colspan="6" class="text-center">No hay proveedores disponibles</td>
+            </tr>
+            <tr *ngFor="let proveedor of proveedores">
+              <td>{{ proveedor.id }}</td>
+              <td>{{ proveedor.primer_nombre }}</td>
+              <td>{{ proveedor.segundo_nombre || '-' }}</td>
+              <td>{{ proveedor.primer_apellido }}</td>
+              <td>{{ proveedor.segundo_apellido || '-' }}</td>
+              <td>{{ proveedor.telefono || '-' }}</td>
+              <td>{{ proveedor.correo }}</td>
+              <td>{{ proveedor.fecha_creacion | date:'short' }}</td>
+              <td>
+                <button class="btn btn-sm btn-primary" (click)="editProveedor(proveedor)">
+                  Editar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      <div class="pagination mt-3" *ngIf="totalPages > 1">
+        <button class="btn btn-secondary" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+          Anterior
+        </button>
+        <span class="mx-3">
+          Página {{ currentPage }} de {{ totalPages }}
+        </span>
+        <button class="btn btn-secondary" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para crear/editar categoría -->
+  <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1"
+    role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ editingProveedor ? 'Editar Proveedor' : 'Nuevo Proveedor' }}</h5>
+          <button type="button" class="close" (click)="closeModal()">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="saveProveedor()">
+            <div class="form-group">
+              <label for="primer_nombre">Primer Nombre *</label>
+              <input type="text" class="form-control" id="primer_nombre" [(ngModel)]="proveedorForm.primer_nombre"
+                name="primer_nombre" required placeholder="Ingrese el primer nombre del proveedor">
+            </div>
+            <div class="form-group">
+              <label for="segundo_nombre">Segundo Nombre</label>
+              <textarea class="form-control" id="segundo_nombre" [(ngModel)]="proveedorForm.segundo_nombre"
+                name="segundo_nombre" rows="3" placeholder="Ingrese un segundo nombre (opcional)"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="primer_apellido">Primer Apellido *</label>
+              <input type="text" class="form-control" id="primer_apellido" [(ngModel)]="proveedorForm.primer_apellido"
+                name="primer_apellido" required placeholder="Ingrese el primer apellido del proveedor">
+            </div>
+            <div class="form-group">
+              <label for="segundo_apellido">Segundo Apellido</label>
+              <textarea class="form-control" id="segundo_apellido" [(ngModel)]="proveedorForm.segundo_apellido"
+                name="segundo_apellido" rows="3" placeholder="Ingrese un segundo apellido (opcional)"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="telefono">Teléfono</label>
+              <textarea class="form-control" id="telefono" [(ngModel)]="proveedorForm.telefono" name="telefono" rows="3"
+                placeholder="Ingrese un teléfono (opcional)"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="correo">Correo *</label>
+              <input type="text" class="form-control" id="correo" [(ngModel)]="proveedorForm.correo" name="correo"
+                required placeholder="Ingrese el correo del proveedor">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="saveProveedor()">
+            {{ editingProveedor ? 'Actualizar' : 'Crear' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
