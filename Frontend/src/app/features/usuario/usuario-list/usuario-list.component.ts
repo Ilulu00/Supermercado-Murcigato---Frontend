@@ -30,6 +30,7 @@ export class UsuarioListComponent implements OnInit {
     private usuarioService: UsuarioService,
     private fb: FormBuilder
   ) {
+    
     this.usuarioForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       nombre_usuario: ['', [Validators.required, Validators.minLength(3)]],

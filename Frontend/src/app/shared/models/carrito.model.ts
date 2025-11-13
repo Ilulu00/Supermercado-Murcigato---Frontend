@@ -39,8 +39,8 @@ export interface UpdateDetalle_carritoRequest{
  */
 export interface CarritoFilters {
     id_carrito?: string;
-  id_usuario?: string;
-  activo?: boolean; // Status filter
+    id_usuario?: string;
+    activo?: boolean; // Status filter
 }
 
 export interface Detalle_carritoFilters{

@@ -2,25 +2,31 @@
  * Modelos para la entidad factura
  */
 
-export interface Factura{
-    id_factura: string; //Este es el uuid de la factura
+
+export interface DetalleFacturaRespuesta{
+    nombre_producto: string;
+    cantidad: number;
+    precio_producto: number;
+    subtotal?: number;
+}   
+
+export interface RespuestaFactura {
+    id_factura: string;
     id_usuario: string;
     id_carrito: string;
-    metodo_pago: string;
-    subtotal: number;
-    descuento: number;
-    total: number;
-    fecha_creacion: string;
     activo: boolean;
+    metodo_pago: string;
+    subtotal_total: number;
+    descuento?: number;
+    total: number;
+    fecha_creacion: string; // string porque llega como ISO
+    detalles: DetalleFacturaRespuesta[];
 }
 
 export interface CreateFactura{
     id_usuario: string;
     id_carrito: string;
     metodo_pago: string;
-    subtotal: number; 
-    descuento: number;
-    total: number;
 }
 
 /**
@@ -37,7 +43,7 @@ export interface FacturaFilters{
  */
 
 export interface FacturaListResponse{
-data: Factura[]
+data: RespuestaFactura[]
   totalPages: number;
   currentPage: number;
   totalItems: number;

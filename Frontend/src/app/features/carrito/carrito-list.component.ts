@@ -47,7 +47,7 @@ export class CarritoListComponent implements OnInit {
     
     ngOnInit(): void {
         this.loadCarritos();
-       /**  this.productoService.getProductos().subscribe(data => {
+        /*this.productoService.getProductos().subscribe(data => {
             this.productos = data;
         });*/
     }
@@ -223,8 +223,8 @@ export class CarritoListComponent implements OnInit {
             })
         )
     }
-
-/*    onSelectProducto(index: number): void {
+/*
+    onSelectProducto(index: number): void {
         const detalleForm = this.detalles.at(index);
 
         const id_producto = detalleForm.get('id_producto')?.value;
@@ -251,13 +251,13 @@ export class CarritoListComponent implements OnInit {
     }
 
     pagarCarrito(carrito: CarritoConDetalles): void {
+        const metodo_pago = prompt("Ingrese su metodo de pago (ejm. Efectivo o Tarjeta): ");
+        if (!metodo_pago) return;
+
         const nuevaFactura: CreateFactura = {
             id_carrito: String(carrito.id_carrito),
             id_usuario: String(carrito.id_usuario), 
-            metodo_pago: '',
-            subtotal: 0.0,
-            descuento: 0.0,
-            total: 0.0
+            metodo_pago: metodo_pago
         };
         
 
