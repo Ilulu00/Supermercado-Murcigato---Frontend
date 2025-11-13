@@ -12,8 +12,8 @@
       <div class="filters mb-3">
         <div class="row">
           <div class="col-md-3">
-            <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="filters.nombre"
-              (input)="onFilterChange()">
+            <input type="text" class="form-control" placeholder="Buscar por nombre..."
+              [(ngModel)]="filters.nombre_producto" (input)="onFilterChange()">
           </div>
           <div class="col-md-2">
             <input type="number" class="form-control" placeholder="Precio mínimo" [(ngModel)]="filters.precio_min"
@@ -54,8 +54,8 @@
             </tr>
             <tr *ngFor="let producto of productos">
               <td>{{ producto.id }}</td>
-              <td>{{ producto.nombre }}</td>
-              <td>{{ formatearPrecio(producto.precio) }}</td>
+              <td>{{ producto.nombre_producto }}</td>
+              <td>{{ formatearPrecio(producto.precio_producto) }}</td>
               <td>{{ producto.categoria?.nombre || '-' }}</td>
               <td>
                 <span class="badge" [class.badge-success]="producto.stock > 20"
