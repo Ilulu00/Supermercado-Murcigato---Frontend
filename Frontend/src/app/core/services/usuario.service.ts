@@ -19,6 +19,7 @@ export class UsuarioService {
     return this.apiService.getPaginated<Usuario>(this.endpoint, pagination, filters);
   }
 
+  
   /**
    * Obtiene un usuario por ID
    */

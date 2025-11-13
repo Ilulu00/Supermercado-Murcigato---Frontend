@@ -27,7 +27,7 @@ export interface User {
   fecha_edicion?: string;
 }
 
-export type UserRole = 'admin' | 'consumidor';
+export type UserRole = 'admin' | 'cliente';
 
 @Injectable({
   providedIn: 'root'
@@ -139,7 +139,7 @@ export class AuthService {
    */
   getUserRole(): UserRole | null {
     const user = this.getCurrentUser();
-    return user?.es_admin ? 'admin' : 'consumidor';
+    return user?.es_admin ? 'admin' : 'cliente';
   }
 
   /**
@@ -177,7 +177,7 @@ export class AuthService {
     if (role === 'admin') return true;
 
     // Consumidor solo puede acceder a productos
-    if (role === 'consumidor') {
+    if (role === 'cliente') {
       return route === 'productos' || route === 'dashboard';
     }
 

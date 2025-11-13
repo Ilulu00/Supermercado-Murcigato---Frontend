@@ -32,6 +32,8 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes').then(m => m.authRoutes)
   },
   {
+    path: '/carrito',
+    loadComponent: () => import('./features/carrito/carrito-list.component').then(m => m.CarritoListComponent),
     path: 'proveedor',
     loadComponent: () => import('./features/proveedor/proveedor-list/proveedor-list.component').then(m => m.ProveedorListComponent),
     canActivate: [AuthGuard]
