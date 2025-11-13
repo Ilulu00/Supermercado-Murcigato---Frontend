@@ -6,35 +6,17 @@
         Nuevo Usuario
       </button>
     </div>
-    
+
     <div class="card-body">
       <!-- Filtros -->
       <div class="filters mb-3">
         <div class="row">
           <div class="col-md-3">
-            <input 
-              type="text" 
-              class="form-control" 
-              placeholder="Buscar por email..."
-              [(ngModel)]="filters.email"
-              (input)="onFilterChange()"
-            >
-          </div>
-          <div class="col-md-3">
-            <input 
-              type="text" 
-              class="form-control" 
-              placeholder="Buscar por nombre..."
-              [(ngModel)]="filters.nombre"
-              (input)="onFilterChange()"
-            >
+            <input type="text" class="form-control" placeholder="Buscar por email..." [(ngModel)]="filters.email"
+              (input)="onFilterChange()">
           </div>
           <div class="col-md-2">
-            <select 
-              class="form-control" 
-              [(ngModel)]="filters.activo"
-              (change)="onFilterChange()"
-            >
+            <select class="form-control" [(ngModel)]="filters.activo" (change)="onFilterChange()">
               <option value="">Todos los estados</option>
               <option value="true">Activos</option>
               <option value="false">Inactivos</option>
@@ -55,8 +37,11 @@
             <tr>
               <th>ID</th>
               <th>Email</th>
-              <th>Nombre</th>
-              <th>Usuario</th>
+              <th>Primer nombre</th>
+              <th>Segundo nombre</th>
+              <th>Primer apellido</th>
+              <th>Segundo apellido</th>
+              <th>Email</th>
               <th>Teléfono</th>
               <th>Estado</th>
               <th>Admin</th>
@@ -74,9 +59,13 @@
             <tr *ngFor="let usuario of usuarios">
               <td>{{ usuario.id }}</td>
               <td>{{ usuario.email }}</td>
-              <td>{{ usuario.nombre }}</td>
-              <td>{{ usuario.nombre_usuario }}</td>
+              <td>{{ usuario.primer_nombre }}</td>
+              <td>{{ usuario.segundo_nombre || '-'}}</td>
+              <td>{{ usuario.primer_apellido}}</td>
+              <td>{{ usuario.segundo_apellido || '-'}}</td>
+              <td>{{ usuario.email}}</td>
               <td>{{ usuario.telefono || '-' }}</td>
+
               <td>
                 <span class="badge" [class.badge-success]="usuario.activo" [class.badge-danger]="!usuario.activo">
                   {{ usuario.activo ? 'Activo' : 'Inactivo' }}
@@ -95,9 +84,6 @@
                 <button class="btn btn-sm btn-warning me-1" (click)="desactivarUsuario(usuario)" *ngIf="usuario.activo">
                   Desactivar
                 </button>
-                <button class="btn btn-sm btn-danger" (click)="deleteUsuario(usuario)">
-                  Eliminar
-                </button>
               </td>
             </tr>
           </tbody>
@@ -106,21 +92,13 @@
 
       <!-- Paginación -->
       <div class="pagination mt-3" *ngIf="totalPages > 1">
-        <button 
-          class="btn btn-secondary" 
-          [disabled]="currentPage === 1"
-          (click)="goToPage(currentPage - 1)"
-        >
+        <button class="btn btn-secondary" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
           Anterior
         </button>
         <span class="mx-3">
           Página {{ currentPage }} de {{ totalPages }}
         </span>
-        <button 
-          class="btn btn-secondary" 
-          [disabled]="currentPage === totalPages"
-          (click)="goToPage(currentPage + 1)"
-        >
+        <button class="btn btn-secondary" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
           Siguiente
         </button>
       </div>
@@ -128,7 +106,8 @@
   </div>
 
   <!-- Modal para crear/editar usuario -->
-  <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1" role="dialog">
+  <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1"
+    role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -140,80 +119,65 @@
         <div class="modal-body">
           <form [formGroup]="usuarioForm" (ngSubmit)="saveUsuario()">
             <div class="form-group mb-3">
-              <label for="nombre">Nombre *</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="nombre" 
-                formControlName="nombre"
-                placeholder="Ingrese el nombre completo"
-              >
-              <div *ngIf="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched" class="text-danger">
-                El nombre es requerido y debe tener al menos 2 caracteres
+              <label for="primer_nombre">Primer nombre *</label>
+              <input type="text" class="form-control" id="primer_nombre" formControlName="primer_nombre"
+                placeholder="Ingrese el primer nombre">
+              <div *ngIf="usuarioForm.get('primer_nombre')?.invalid && usuarioForm.get('primer_nombre')?.touched"
+                class="text-danger">
+                El primer nombre es requerido y debe tener al menos 2 carácteres
               </div>
             </div>
-            
+
             <div class="form-group mb-3">
-              <label for="nombre_usuario">Nombre de Usuario *</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="nombre_usuario" 
-                formControlName="nombre_usuario"
-                placeholder="Ingrese el nombre de usuario"
-              >
-              <div *ngIf="usuarioForm.get('nombre_usuario')?.invalid && usuarioForm.get('nombre_usuario')?.touched" class="text-danger">
-                El nombre de usuario es requerido y debe tener al menos 3 caracteres
+              <label for="segundo_nombre">Segundo nombre</label>
+              <input type="text" class="form-control" id="segundo_nombre" formControlName="segundo_nombre"
+                placeholder="Ingrese el segundo nombre">
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="primer_apellido">Primer apellido *</label>
+              <input type="text" class="form-control" id="primer_apellido" formControlName="primer_apellido"
+                placeholder="Ingrese el primer apellido">
+              <div *ngIf="usuarioForm.get('primer_apellido')?.invalid && usuarioForm.get('primer_apellido')?.touched"
+                class="text-danger">
+                El primer apellido es requerido y debe tener al menos 2 carácteres
               </div>
             </div>
-            
+
+            <div class="form-group mb-3">
+              <label for="segundo_apellido">Segundo apellido</label>
+              <input type="text" class="form-control" id="segundo_apellido" formControlName="segundo_apellido"
+                placeholder="Ingrese el segundo apellido">
+            </div>
+
             <div class="form-group mb-3">
               <label for="email">Email *</label>
-              <input 
-                type="email" 
-                class="form-control" 
-                id="email" 
-                formControlName="email"
-                placeholder="Ingrese el email del usuario"
-              >
+              <input type="email" class="form-control" id="email" formControlName="email"
+                placeholder="Ingrese el email del usuario">
               <div *ngIf="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched" class="text-danger">
-                Ingrese un email válido
+                Ingrese un email válido, este campo es obligatorio
               </div>
             </div>
-            
+
             <div class="form-group mb-3">
               <label for="telefono">Teléfono</label>
-              <input 
-                type="tel" 
-                class="form-control" 
-                id="telefono" 
-                formControlName="telefono"
-                placeholder="Ingrese el teléfono (opcional)"
-              >
+              <input type="tel" class="form-control" id="telefono" formControlName="telefono"
+                placeholder="Ingrese su número de teléfono">
             </div>
-            
+
             <div class="form-group mb-3" *ngIf="!editingUsuario">
               <label for="contraseña">Contraseña *</label>
-              <input 
-                type="password" 
-                class="form-control" 
-                id="contraseña" 
-                formControlName="contraseña"
-                placeholder="Ingrese la contraseña"
-              >
-              <div *ngIf="usuarioForm.get('contraseña')?.invalid && usuarioForm.get('contraseña')?.touched" class="text-danger">
-                La contraseña es requerida para nuevos usuarios
+              <input type="password" class="form-control" id="contraseña" formControlName="contraseña"
+                placeholder="Ingrese la contraseña">
+              <div *ngIf="usuarioForm.get('contraseña')?.invalid && usuarioForm.get('contraseña')?.touched"
+                class="text-danger">
+                La contraseña debe tener al menos 8 carácteres
               </div>
             </div>
-            
+
             <div class="form-group mb-3">
               <div class="form-check">
-                <input 
-                  type="checkbox" 
-                  class="form-check-input" 
-                  id="es_admin" 
-                  formControlName="es_admin"
-                >
+                <input type="checkbox" class="form-check-input" id="es_admin" formControlName="es_admin">
                 <label class="form-check-label" for="es_admin">
                   Usuario Administrador
                 </label>
