@@ -4,11 +4,11 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 declare interface RouteInfo {
-    path: string;
-    title: string;
-    icon: string;
-    class: string;
-    roles?: string[];
+  path: string;
+  title: string;
+  icon: string;
+  class: string;
+  roles?: string[];
 }
 
 export const ROUTES: RouteInfo[] = [
@@ -51,12 +51,12 @@ export class SidebarComponent implements OnInit {
     const userRole = this.authService.getUserRole();
     return userRole ? menuItem.roles.includes(userRole) : false;
   }
-  
+
   isMobileMenu() {
-      if ( window.innerWidth > 991) {
-          return false;
-      }
-      return true;
+    if (window.innerWidth > 991) {
+      return false;
+    }
+    return true;
   }
 
   logout() {

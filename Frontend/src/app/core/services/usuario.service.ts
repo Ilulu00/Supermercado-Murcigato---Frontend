@@ -35,13 +35,6 @@ export class UsuarioService {
   }
 
   /**
-   * Obtiene un usuario por nombre de usuario
-   */
-  getUsuarioByUsername(username: string): Observable<Usuario> {
-    return this.apiService.get<Usuario>(`${this.endpoint}/username/${username}`);
-  }
-
-  /**
    * Crea un nuevo usuario
    */
   createUsuario(usuario: CreateUsuarioRequest): Observable<Usuario> {
@@ -56,13 +49,6 @@ export class UsuarioService {
   }
 
   /**
-   * Elimina un usuario
-   */
-  deleteUsuario(id: string): Observable<any> {
-    return this.apiService.delete<any>(`${this.endpoint}/${id}`);
-  }
-
-  /**
    * Desactiva un usuario (soft delete)
    */
   desactivarUsuario(id: string): Observable<Usuario> {
@@ -73,7 +59,7 @@ export class UsuarioService {
    * Cambia la contraseña de un usuario
    */
   changePassword(id: string, passwordData: ChangePasswordRequest): Observable<any> {
-    return this.apiService.post<any>(`${this.endpoint}/${id}/cambiar-contraseña`, passwordData);
+    return this.apiService.post<any>(`${this.endpoint}/${id}/cambiar-contrasena`, passwordData);
   }
 
   /**

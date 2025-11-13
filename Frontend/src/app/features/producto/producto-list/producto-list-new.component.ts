@@ -56,9 +56,6 @@ import { Producto, ProductoFilters } from '../../../shared/models/producto.model
                   [(ngModel)]="filters.activo"
                   (change)="onFilterChange()"
                 >
-                  <option value="">Todos los estados</option>
-                  <option value="true">Activos</option>
-                  <option value="false">Inactivos</option>
                 </select>
               </div>
               <div class="col-md-2">
@@ -79,7 +76,6 @@ import { Producto, ProductoFilters } from '../../../shared/models/producto.model
                   <th>Precio</th>
                   <th>Stock</th>
                   <th>Categoría</th>
-                  <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -93,20 +89,12 @@ import { Producto, ProductoFilters } from '../../../shared/models/producto.model
                 <tr *ngFor="let producto of productos">
                   <td>{{ producto.id }}</td>
                   <td>{{ producto.nombre }}</td>
-                  <td>${{ producto.precio | number:'1.2-2' }}</td>
+                  <td>{{ producto.precio | number:'1.2-2' }}</td>
                   <td>{{ producto.stock }}</td>
                   <td>{{ producto.categoria?.nombre || '-' }}</td>
                   <td>
-                    <span class="badge" [class.badge-success]="producto.activo" [class.badge-danger]="!producto.activo">
-                      {{ producto.activo ? 'Activo' : 'Inactivo' }}
-                    </span>
-                  </td>
-                  <td>
                     <button class="btn btn-sm btn-primary" (click)="editProducto(producto)">
                       Editar
-                    </button>
-                    <button class="btn btn-sm btn-danger" (click)="deleteProducto(producto)">
-                      Eliminar
                     </button>
                   </td>
                 </tr>
@@ -172,7 +160,7 @@ export class ProductoListComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   pageSize = 10;
-  
+
   filters: ProductoFilters = {};
 
   constructor(private productoService: ProductoService) { }
@@ -189,9 +177,9 @@ export class ProductoListComponent implements OnInit {
     };
 
     this.productoService.getProductos(pagination, this.filters).subscribe({
-      next: (response) => {
-        this.productos = response.data;
-        this.totalPages = response.totalPages;
+      next: (productos) => {
+        this.productos = productos;
+        this.totalPages = Math.ceil(productos.length / this.pageSize);
         this.loading = false;
       },
       error: (error) => {
@@ -229,16 +217,4 @@ export class ProductoListComponent implements OnInit {
     console.log('Editar producto:', producto);
   }
 
-  deleteProducto(producto: Producto): void {
-    if (confirm(`¿Está seguro de eliminar el producto "${producto.nombre}"?`)) {
-      this.productoService.deleteProducto(producto.id).subscribe({
-        next: () => {
-          this.loadProductos();
-        },
-        error: (error) => {
-          console.error('Error al eliminar producto:', error);
-        }
-      });
-    }
-  }
 }

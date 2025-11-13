@@ -34,6 +34,8 @@ export const routes: Routes = [
   {
     path: '/carrito',
     loadComponent: () => import('./features/carrito/carrito-list.component').then(m => m.CarritoListComponent),
+    path: 'proveedor',
+    loadComponent: () => import('./features/proveedor/proveedor-list/proveedor-list.component').then(m => m.ProveedorListComponent),
     canActivate: [AuthGuard]
   },
   {
