@@ -12,13 +12,14 @@ declare interface RouteInfo {
 }
 
 export const ROUTES: RouteInfo[] = [
-  { path: '/dashboard', title: 'Dashboard', icon: 'design_app', class: '' },
-  { path: '/categorias', title: 'Categorías', icon: 'shopping_basket', class: '', roles: ['admin'] },
-  { path: '/usuarios', title: 'Usuarios', icon: 'users_single-02', class: '', roles: ['admin'] },
-  { path: '/productos', title: 'Productos', icon: 'shopping_box', class: '' },
-  { path: '/proveedor', title: 'Proveedores', icon: 'users_single-02', class: '', roles: ['admin'] },
-  { path: '/notifications', title: 'Notificaciones', icon: 'ui-1_bell-53', class: '', roles: ['admin'] },
-  { path: '/upgrade', title: 'Configuración', icon: 'objects_spaceship', class: 'active active-pro', roles: ['admin'] }
+    { path: '/dashboard', title: 'Dashboard',  icon: 'design_app', class: '' },
+    { path: '/categorias', title: 'Categorías',  icon:'shopping_basket', class: '', roles: ['admin'] },
+    { path: '/usuarios', title: 'Usuarios',  icon:'users_single-02', class: '', roles: ['admin'] },
+    { path: '/productos', title: 'Productos',  icon:'shopping_box', class: '' },
+    { path: '/carrito', title: 'Carrito de compras', icon: 'shopping_box', class: ''},
+    { path: '/facturas', title: 'Facturas', icon: 'design_app', class: '', roles: ['admin']},
+    { path: '/notifications', title: 'Notificaciones',  icon:'ui-1_bell-53', class: '', roles: ['admin'] },
+    { path: '/upgrade', title: 'Configuración',  icon:'objects_spaceship', class: 'active active-pro', roles: ['admin'] }
 ];
 
 @Component({
