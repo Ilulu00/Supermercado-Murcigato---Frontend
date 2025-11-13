@@ -28,21 +28,21 @@ import { NotificationService } from '../../../core/services/notification.service
                   <span class="label-icon">
                     <i class="now-ui-icons users_single-02"></i>
                   </span>
-                  Usuario
+                  Correo
                 </label>
                 <input 
                   type="text" 
                   id="email"
                   class="form-control" 
-                  [(ngModel)]="loginData.nombre_usuario"
-                  name="nombre_usuario"
+                  [(ngModel)]="loginData.email"
+                  name="email"
                   required
                   placeholder="admin"
                   #email="ngModel"
                   [class.is-invalid]="email.invalid && email.touched"
                 >
                 <div class="invalid-feedback" *ngIf="email.invalid && email.touched">
-                  <div *ngIf="email.errors?.['required']">El usuario es requerido</div>
+                  <div *ngIf="email.errors?.['required']">El correo es requerido</div>
                 </div>
               </div>
 
@@ -103,7 +103,7 @@ import { NotificationService } from '../../../core/services/notification.service
                       <i class="now-ui-icons users_single-02"></i>
                       Administrador
                     </h4>
-                    <p><strong>Usuario:</strong> admin</p>
+                    <p><strong>Correo:</strong> admin</p>
                     <p><strong>Contraseña:</strong> admin123</p>
                     <p class="role-info">Acceso completo a todas las funcionalidades</p>
                   </div>
@@ -112,7 +112,7 @@ import { NotificationService } from '../../../core/services/notification.service
                       <i class="now-ui-icons shopping_bag-16"></i>
                       Consumidor
                     </h4>
-                    <p><strong>Usuario:</strong> consumidor</p>
+                    <p><strong>Correo:</strong> consumidor</p>
                     <p><strong>Contraseña:</strong> consumidor123</p>
                     <p class="role-info">Solo puede ver productos</p>
                   </div>
@@ -380,10 +380,10 @@ import { NotificationService } from '../../../core/services/notification.service
 })
 export class LoginComponent implements OnInit {
   loginData: LoginRequest = {
-    nombre_usuario: '',
+    email: '',
     contrasena: ''
   };
-  
+
   loading = false;
 
   constructor(
@@ -417,22 +417,22 @@ export class LoginComponent implements OnInit {
 
     console.log('Intentando login con:', this.loginData);
     this.loading = true;
-    
+
     // Verificar si es un login de prueba (admin/admin123)
-    if (this.loginData.nombre_usuario === 'admin' && this.loginData.contrasena === 'admin123') {
+    if (this.loginData.email === 'admin' && this.loginData.contrasena === 'admin123') {
       console.log('Login de prueba detectado, usando datos mock');
       this.loginMock();
       return;
     }
-    
+
     this.authService.login(this.loginData).subscribe({
       next: (response) => {
         console.log('Respuesta del login:', response);
         this.authService.setUserData(response);
         this.notificationService.showSuccess('Inicio de sesión exitoso');
-        
+
         // Redirigir según el rol
-        if (response.nombre_usuario.es_admin) {
+        if (response.email.es_admin) {
           this.router.navigate(['/dashboard']);
         } else {
           this.router.navigate(['/productos']);
@@ -442,7 +442,7 @@ export class LoginComponent implements OnInit {
       error: (error) => {
         console.error('Error en login:', error);
         console.error('Error completo:', JSON.stringify(error));
-        
+
         // Si el backend no está disponible, usar login mock
         if (error.status === 0 || error.status === undefined) {
           console.log('Backend no disponible, usando login mock');
@@ -459,11 +459,13 @@ export class LoginComponent implements OnInit {
     // Login mock para cuando el backend no está disponible
     const mockResponse = {
       clave: 'mock_token_' + Date.now(),
-      nombre_usuario: {
+      email: {
         id: '1',
-        nombre: 'Administrador',
-        nombre_usuario: 'admin',
-        email: 'admin@itm.edu.co',
+        primer_nombre: 'Administrador',
+        segundo_nombre: '',
+        primer_apellido: 'Mock',
+        segundo_apellido: '',
+        email: 'admin@mock.com',
         telefono: '',
         activo: true,
         es_admin: true,
@@ -471,17 +473,17 @@ export class LoginComponent implements OnInit {
         fecha_edicion: new Date().toISOString()
       }
     };
-    
+
     console.log('Usando login mock:', mockResponse);
     this.authService.setUserData(mockResponse);
     this.notificationService.showSuccess('Inicio de sesión exitoso (modo demo)');
-    
+
     // Verificar que los datos se guardaron en localStorage
     console.log('Verificando localStorage después del login:');
     console.log('Token:', localStorage.getItem('auth_token'));
     console.log('Usuario:', localStorage.getItem('user_data'));
     console.log('Rol:', localStorage.getItem('user_role'));
-    
+
     this.router.navigate(['/dashboard']);
     this.loading = false;
   }

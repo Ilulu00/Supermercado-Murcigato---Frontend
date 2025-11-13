@@ -4,20 +4,22 @@ import { Usuario } from '../../shared/models/usuario.model';
 import { ApiService } from './api.service';
 
 export interface LoginRequest {
-  nombre_usuario: string;
+  email: string;
   contrasena: string;
 }
 
 export interface LoginResponse {
   clave: string;
-  nombre_usuario: Usuario;
+  email: Usuario;
 }
 
 export interface User {
   id: string;
+  primer_nombre: string;
+  segundo_nombre?: string;
+  primer_apellido: string;
+  segundo_apellido?: string;
   email: string;
-  nombre: string;
-  nombre_usuario: string;
   telefono?: string;
   activo: boolean;
   es_admin: boolean;
@@ -34,7 +36,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'user_data';
   private readonly ROLE_KEY = 'user_role';
-  
+
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -108,9 +110,9 @@ export class AuthService {
   setUserData(loginResponse: LoginResponse): void {
     console.log('AuthService: Guardando datos del usuario:', loginResponse);
     localStorage.setItem(this.TOKEN_KEY, loginResponse.clave);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(loginResponse.nombre_usuario));
-    localStorage.setItem(this.ROLE_KEY, loginResponse.nombre_usuario.es_admin ? 'admin' : 'consumidor');
-    this.currentUserSubject.next(loginResponse.nombre_usuario);
+    localStorage.setItem(this.USER_KEY, JSON.stringify(loginResponse.email));
+    localStorage.setItem(this.ROLE_KEY, loginResponse.email.es_admin ? 'admin' : 'consumidor');
+    this.currentUserSubject.next(loginResponse.email);
     console.log('AuthService: Datos guardados en localStorage');
     console.log('Token:', localStorage.getItem(this.TOKEN_KEY));
     console.log('Usuario:', localStorage.getItem(this.USER_KEY));
@@ -168,7 +170,7 @@ export class AuthService {
    */
   canAccess(route: string): boolean {
     const role = this.getUserRole();
-    
+
     if (!role) return false;
 
     // Admin puede acceder a todo

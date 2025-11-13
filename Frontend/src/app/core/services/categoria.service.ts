@@ -41,13 +41,6 @@ export class CategoriaService {
   }
 
   /**
-   * Elimina una categoría
-   */
-  deleteCategoria(id: string): Observable<any> {
-    return this.apiService.delete<any>(`${this.endpoint}/${id}`);
-  }
-
-  /**
    * Obtiene una categoría por nombre
    */
   getCategoriaByNombre(nombre: string): Observable<Categoria> {

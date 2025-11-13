@@ -4,20 +4,21 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 declare interface RouteInfo {
-    path: string;
-    title: string;
-    icon: string;
-    class: string;
-    roles?: string[];
+  path: string;
+  title: string;
+  icon: string;
+  class: string;
+  roles?: string[];
 }
 
 export const ROUTES: RouteInfo[] = [
-    { path: '/dashboard', title: 'Dashboard',  icon: 'design_app', class: '' },
-    { path: '/categorias', title: 'Categorías',  icon:'shopping_basket', class: '', roles: ['admin'] },
-    { path: '/usuarios', title: 'Usuarios',  icon:'users_single-02', class: '', roles: ['admin'] },
-    { path: '/productos', title: 'Productos',  icon:'shopping_box', class: '' },
-    { path: '/notifications', title: 'Notificaciones',  icon:'ui-1_bell-53', class: '', roles: ['admin'] },
-    { path: '/upgrade', title: 'Configuración',  icon:'objects_spaceship', class: 'active active-pro', roles: ['admin'] }
+  { path: '/dashboard', title: 'Dashboard', icon: 'design_app', class: '' },
+  { path: '/categorias', title: 'Categorías', icon: 'shopping_basket', class: '', roles: ['admin'] },
+  { path: '/usuarios', title: 'Usuarios', icon: 'users_single-02', class: '', roles: ['admin'] },
+  { path: '/productos', title: 'Productos', icon: 'shopping_box', class: '' },
+  { path: '/proveedor', title: 'Proveedores', icon: 'users_single-02', class: '', roles: ['admin'] },
+  { path: '/notifications', title: 'Notificaciones', icon: 'ui-1_bell-53', class: '', roles: ['admin'] },
+  { path: '/upgrade', title: 'Configuración', icon: 'objects_spaceship', class: 'active active-pro', roles: ['admin'] }
 ];
 
 @Component({
@@ -49,12 +50,12 @@ export class SidebarComponent implements OnInit {
     const userRole = this.authService.getUserRole();
     return userRole ? menuItem.roles.includes(userRole) : false;
   }
-  
+
   isMobileMenu() {
-      if ( window.innerWidth > 991) {
-          return false;
-      }
-      return true;
+    if (window.innerWidth > 991) {
+      return false;
+    }
+    return true;
   }
 
   logout() {
