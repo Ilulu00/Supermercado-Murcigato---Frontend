@@ -60,16 +60,16 @@ export class ProductoListComponent implements OnInit {
           this.productos = [{
             id_producto: '1',
             id: '1',
-            nombre: 'Agility Gold cuidado especial para la piel perros',
-            precio: 70000,
+            nombre_producto: 'Agility Gold cuidado especial para la piel perros',
+            precio_producto: 70000,
             stock: 15,
-            categoria_id: '1',
-            proveedor_id: '1',
+            id_categoria: '1',
+            id_proveedor: '1',
             categoria: {
               nombre: 'Mascotas'
             },
             fecha_creacion: new Date().toISOString(),
-            fecha_edicion: new Date().toISOString()
+            fecha_actualizacion: new Date().toISOString()
           }];
           this.totalPages = 1;
         }
@@ -111,11 +111,11 @@ export class ProductoListComponent implements OnInit {
   editProducto(producto: Producto): void {
     this.editingProducto = producto;
     this.productoForm = {
-      nombre_producto: producto.nombre,
-      precio_producto: producto.precio,
+      nombre_producto: producto.nombre_producto,
+      precio_producto: producto.precio_producto,
       stock: producto.stock,
-      id_categoria: producto.categoria_id,
-      id_proveedor: producto.proveedor_id,
+      id_categoria: producto.id_categoria,
+      id_proveedor: producto.id_proveedor,
     };
     this.showModal = true;
   }
@@ -161,11 +161,11 @@ export class ProductoListComponent implements OnInit {
     } else {
       // Crear nuevo producto
       const newProducto = {
-        nombre: this.productoForm.nombre_producto,
-        precio: this.productoForm.precio_producto,
+        nombre_producto: this.productoForm.nombre_producto,
+        precio_producto: this.productoForm.precio_producto,
         stock: this.productoForm.stock,
-        categoria_id: this.productoForm.id_proveedor,
-        proveedor_id: this.productoForm.id_proveedor
+        id_categoria: this.productoForm.id_categoria,
+        id_proveedor: this.productoForm.id_proveedor
       };
 
       this.productoService.createProducto(newProducto).subscribe({

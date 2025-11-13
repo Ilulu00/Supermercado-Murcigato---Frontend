@@ -28,7 +28,7 @@ import { Producto, ProductoFilters } from '../../../shared/models/producto.model
                   type="text" 
                   class="form-control" 
                   placeholder="Buscar por nombre..."
-                  [(ngModel)]="filters.nombre"
+                  [(ngModel)]="filters.nombre_producto"
                   (input)="onFilterChange()"
                 >
               </div>
@@ -49,14 +49,6 @@ import { Producto, ProductoFilters } from '../../../shared/models/producto.model
                   [(ngModel)]="filters.precio_max"
                   (input)="onFilterChange()"
                 >
-              </div>
-              <div class="col-md-2">
-                <select 
-                  class="form-control" 
-                  [(ngModel)]="filters.activo"
-                  (change)="onFilterChange()"
-                >
-                </select>
               </div>
               <div class="col-md-2">
                 <button class="btn btn-secondary" (click)="clearFilters()">
@@ -88,8 +80,8 @@ import { Producto, ProductoFilters } from '../../../shared/models/producto.model
                 </tr>
                 <tr *ngFor="let producto of productos">
                   <td>{{ producto.id }}</td>
-                  <td>{{ producto.nombre }}</td>
-                  <td>{{ producto.precio | number:'1.2-2' }}</td>
+                  <td>{{ producto.nombre_producto }}</td>
+                  <td>{{ producto.precio_producto | number:'1.2-2' }}</td>
                   <td>{{ producto.stock }}</td>
                   <td>{{ producto.categoria?.nombre || '-' }}</td>
                   <td>
