@@ -41,13 +41,6 @@ export class ProductoService {
   }
 
   /**
-   * Elimina un producto
-   */
-  deleteProducto(id: string): Observable<any> {
-    return this.apiService.delete<any>(`${this.endpoint}/${id}`);
-  }
-
-  /**
    * Obtiene productos por categoría
    */
   getProductosByCategoria(categoriaId: string): Observable<Producto[]> {

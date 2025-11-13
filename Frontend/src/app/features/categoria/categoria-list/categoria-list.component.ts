@@ -18,16 +18,15 @@ export class CategoriaListComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   pageSize = 10;
-  
+
   filters: CategoriaFilters = {};
-  
+
   // Modal properties
   showModal = false;
   editingCategoria: Categoria | null = null;
   categoriaForm = {
     nombre: '',
-    descripcion: '',
-    activa: true
+    descripcion: ''
   };
 
   constructor(private categoriaService: CategoriaService) { }
@@ -58,9 +57,8 @@ export class CategoriaListComponent implements OnInit {
           this.categorias = [{
             id_categoria: '1',
             id: '1',
-            nombre: 'Tecnología',
-            descripcion: 'Categoría para productos tecnológicos',
-            activa: true,
+            nombre: 'Mascotas',
+            descripcion: 'Productos hechos para las mascotas del hogar, sanos para ellos.',
             fecha_creacion: new Date().toISOString(),
             fecha_edicion: new Date().toISOString()
           }];
@@ -94,7 +92,6 @@ export class CategoriaListComponent implements OnInit {
     this.categoriaForm = {
       nombre: '',
       descripcion: '',
-      activa: true
     };
     this.showModal = true;
   }
@@ -103,8 +100,7 @@ export class CategoriaListComponent implements OnInit {
     this.editingCategoria = categoria;
     this.categoriaForm = {
       nombre: categoria.nombre,
-      descripcion: categoria.descripcion || '',
-      activa: categoria.activa
+      descripcion: categoria.descripcion || ''
     };
     this.showModal = true;
   }
@@ -114,8 +110,7 @@ export class CategoriaListComponent implements OnInit {
     this.editingCategoria = null;
     this.categoriaForm = {
       nombre: '',
-      descripcion: '',
-      activa: true
+      descripcion: ''
     };
   }
 
@@ -129,10 +124,9 @@ export class CategoriaListComponent implements OnInit {
       // Actualizar categoría existente
       const updateData = {
         nombre: this.categoriaForm.nombre,
-        descripcion: this.categoriaForm.descripcion,
-        activa: this.categoriaForm.activa
+        descripcion: this.categoriaForm.descripcion
       };
-      
+
       this.categoriaService.updateCategoria(this.editingCategoria.id, updateData).subscribe({
         next: () => {
           this.loadCategorias();
@@ -147,10 +141,9 @@ export class CategoriaListComponent implements OnInit {
       // Crear nueva categoría
       const newCategoria = {
         nombre: this.categoriaForm.nombre,
-        descripcion: this.categoriaForm.descripcion,
-        activa: this.categoriaForm.activa
+        descripcion: this.categoriaForm.descripcion
       };
-      
+
       this.categoriaService.createCategoria(newCategoria).subscribe({
         next: () => {
           this.loadCategorias();
@@ -159,19 +152,6 @@ export class CategoriaListComponent implements OnInit {
         error: (error) => {
           console.error('Error al crear categoría:', error);
           alert('Error al crear la categoría');
-        }
-      });
-    }
-  }
-
-  deleteCategoria(categoria: Categoria): void {
-    if (confirm(`¿Está seguro de eliminar la categoría "${categoria.nombre}"?`)) {
-      this.categoriaService.deleteCategoria(categoria.id).subscribe({
-        next: () => {
-          this.loadCategorias();
-        },
-        error: (error) => {
-          console.error('Error al eliminar categoría:', error);
         }
       });
     }

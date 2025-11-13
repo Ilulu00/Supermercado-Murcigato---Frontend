@@ -69,49 +69,115 @@ import { CreateUsuarioRequest } from '../../../shared/models/usuario.model';
               </div>
 
               <div class="form-group">
-                <label for="nombre" class="form-label">
+                <label for="primer_nombre" class="form-label">
                   <span class="label-icon">👤</span>
-                  Nombre
+                  Primer Nombre
                 </label>
                 <input 
                   type="text" 
-                  id="nombre"
+                  id="primer_nombre"
                   class="form-control" 
-                  [(ngModel)]="registerData.nombre"
-                  name="nombre"
+                  [(ngModel)]="registerData.primer_nombre"
+                  name="primer_nombre"
                   required
                   minlength="2"
-                  placeholder="Tu nombre"
-                  #nombre="ngModel"
-                  [class.is-invalid]="nombre.invalid && nombre.touched"
+                  placeholder="Tu primer nombre"
+                  #primer_nombre="ngModel"
+                  [class.is-invalid]="primer_nombre.invalid && primer_nombre.touched"
                 >
-                <div class="invalid-feedback" *ngIf="nombre.invalid && nombre.touched">
-                  <div *ngIf="nombre.errors?.['required']">El nombre es requerido</div>
-                  <div *ngIf="nombre.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</div>
+                <div class="invalid-feedback" *ngIf="primer_nombre.invalid && primer_nombre.touched">
+                  <div *ngIf="primer_nombre.errors?.['required']">El primer nombre es requerido</div>
+                  <div *ngIf="primer_nombre.errors?.['minlength']">El primer nombre debe tener al menos 2 caracteres</div>
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="apellido" class="form-label">
-                  <span class="label-icon">👥</span>
-                  Apellido
+                <label for="segundo_nombre" class="form-label">
+                  <span class="label-icon">👤</span>
+                  Segundo Nombre
                 </label>
                 <input 
                   type="text" 
-                  id="apellido"
+                  id="segundo_nombre"
                   class="form-control" 
-                  [(ngModel)]="registerData.apellido"
-                  name="apellido"
+                  [(ngModel)]="registerData.segundo_nombre"
+                  name="segundo_nombre"
+                  placeholder="Tu segundo nombre (Opcional)"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="primer_apellido" class="form-label">
+                  <span class="label-icon">👥</span>
+                  Primer Apellido
+                </label>
+                <input 
+                  type="text" 
+                  id="primer_apellido"
+                  class="form-control" 
+                  [(ngModel)]="registerData.primer_apellido"
+                  name="primer_apellido"
                   required
                   minlength="2"
-                  placeholder="Tu apellido"
-                  #apellido="ngModel"
-                  [class.is-invalid]="apellido.invalid && apellido.touched"
+                  placeholder="Tu primer apellido"
+                  #primer_apellido="ngModel"
+                  [class.is-invalid]="primer_apellido.invalid && primer_apellido.touched"
                 >
-                <div class="invalid-feedback" *ngIf="apellido.invalid && apellido.touched">
-                  <div *ngIf="apellido.errors?.['required']">El apellido es requerido</div>
-                  <div *ngIf="apellido.errors?.['minlength']">El apellido debe tener al menos 2 caracteres</div>
+                <div class="invalid-feedback" *ngIf="primer_apellido.invalid && primer_apellido.touched">
+                  <div *ngIf="primer_apellido.errors?.['required']">El primer apellido es requerido</div>
+                  <div *ngIf="primer_apellido.errors?.['minlength']">El primer apellido debe tener al menos 2 caracteres</div>
                 </div>
+              </div>
+
+              <div class="form-group">
+                <label for="segundo_apellido" class="form-label">
+                  <span class="label-icon">👥</span>
+                  Segundo Apellido
+                </label>
+                <input 
+                  type="text" 
+                  id="segundo_apellido"
+                  class="form-control" 
+                  [(ngModel)]="registerData.segundo_apellido"
+                  name="segundo_apellido"
+                  placeholder="Tu segundo apellido (Opcional)"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="email" class="form-label">
+                  <span class="label-icon">👥</span>
+                  Email
+                </label>
+                <input 
+                  type="text" 
+                  id="email"
+                  class="form-control" 
+                  [(ngModel)]="registerData.email"
+                  name="email"
+                  required
+                  placeholder="Tu email"
+                  #apellido="ngModel"
+                  [class.is-invalid]="email.invalid && email.touched"
+                >
+                <div class="invalid-feedback" *ngIf="email.invalid && email.touched">
+                  <div *ngIf="email.errors?.['required']">El email es requerido</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="telefono" class="form-label">
+                  <span class="label-icon">👥</span>
+                  Teléfono
+                </label>
+                <input 
+                  type="text" 
+                  id="telefono"
+                  class="form-control" 
+                  [(ngModel)]="registerData.telefono"
+                  name="telefono"
+                  placeholder="Tu teléfono (Opcional)"
+                >
               </div>
 
               <div class="form-group">
@@ -293,16 +359,17 @@ import { CreateUsuarioRequest } from '../../../shared/models/usuario.model';
 })
 export class RegisterComponent implements OnInit {
   registerData: CreateUsuarioRequest = {
+    primer_nombre: '',
+    segundo_nombre: '',
+    primer_apellido: '',
+    segundo_apellido: '',
     email: '',
-    password: '',
-    contraseña: '',
-    nombre: '',
-    apellido: '',
-    nombre_usuario: '',
     telefono: '',
+    contrasena: '',
+    password: '',
     es_admin: false
   };
-  
+
   loading = false;
 
   constructor(
@@ -320,7 +387,7 @@ export class RegisterComponent implements OnInit {
     if (this.loading) return;
 
     this.loading = true;
-    
+
     this.usuarioService.createUsuario(this.registerData).subscribe({
       next: (response) => {
         this.notificationService.showSuccess('Usuario registrado exitosamente');

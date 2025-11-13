@@ -5,12 +5,10 @@ export interface Producto {
   id_producto: string; // UUID
   id: string; // Alias for id_producto for frontend compatibility
   nombre: string;
-  descripcion?: string;
   precio: number;
   stock: number;
   categoria_id: string; // UUID
-  usuario_id: string; // UUID
-  activo: boolean; // Status field
+  proveedor_id: string; // UUID
   categoria?: { // Optional relationship data
     nombre: string;
   };
@@ -23,11 +21,10 @@ export interface Producto {
  */
 export interface CreateProductoRequest {
   nombre: string;
-  descripcion: string;
   precio: number;
   stock: number;
   categoria_id: string;
-  usuario_id: string;
+  proveedor_id: string;
 }
 
 /**
@@ -35,11 +32,10 @@ export interface CreateProductoRequest {
  */
 export interface UpdateProductoRequest {
   nombre?: string;
-  descripcion?: string;
   precio?: number;
   stock?: number;
   categoria_id?: string;
-  usuario_id?: string;
+  proveedor_id?: string;
 }
 
 /**

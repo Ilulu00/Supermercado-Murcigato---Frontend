@@ -1,8 +1,8 @@
 <div class="logo">
     <a href="#" class="simple-text logo-mini">
-      <div class="logo-img">
-          <div class="logo-text">ITM</div>
-      </div>
+        <div class="logo-img">
+            <div class="logo-text">ITM</div>
+        </div>
     </a>
     <a href="#" class="simple-text logo-normal">
         Sistema ITM
@@ -17,7 +17,7 @@
             </a>
         </li>
     </ul>
-    
+
     <!-- Información del usuario y logout -->
     <div class="user-info" *ngIf="authService.getCurrentUser()">
         <div class="user-details">
@@ -25,7 +25,7 @@
                 <i class="now-ui-icons users_single-02"></i>
             </div>
             <div class="user-text">
-                <div class="user-name">{{authService.getCurrentUser()?.nombre}}</div>
+                <div class="user-first_name">{{authService.getCurrentUser()?.primer_nombre}}</div>
                 <div class="user-role">{{authService.getCurrentUser()?.es_admin ? 'Administrador' : 'Usuario'}}</div>
             </div>
         </div>

@@ -3,8 +3,10 @@
  */
 export interface Usuario {
   id: string; // UUID
-  nombre: string;
-  nombre_usuario: string;
+  primer_nombre: string;
+  segundo_nombre?: string;
+  primer_apellido: string;
+  segundo_apellido?: string;
   email: string;
   telefono?: string;
   activo: boolean;
@@ -17,22 +19,25 @@ export interface Usuario {
  * Modelo para crear un nuevo usuario
  */
 export interface CreateUsuarioRequest {
-  nombre: string;
-  nombre_usuario: string;
+  primer_nombre: string;
+  segundo_nombre?: string;
+  primer_apellido: string;
+  segundo_apellido?: string;
   email: string;
-  contraseña: string;
+  contrasena: string;
   telefono?: string;
   es_admin?: boolean;
   password: string; // Alias for contraseña for frontend compatibility
-  apellido: string; // Additional field for frontend
 }
 
 /**
  * Modelo para actualizar un usuario
  */
 export interface UpdateUsuarioRequest {
-  nombre?: string;
-  nombre_usuario?: string;
+  primer_nombre?: string;
+  segundo_nombre?: string;
+  primer_apellido?: string;
+  segundo_apellido?: string;
   email?: string;
   telefono?: string;
   es_admin?: boolean;
@@ -43,8 +48,8 @@ export interface UpdateUsuarioRequest {
  * Modelo para cambiar contraseña
  */
 export interface ChangePasswordRequest {
-  contraseña_actual: string;
-  nueva_contraseña: string;
+  contrasena_actual: string;
+  nueva_contrasena: string;
 }
 
 /**
@@ -52,8 +57,10 @@ export interface ChangePasswordRequest {
  */
 export interface UsuarioFilters {
   email?: string;
-  nombre?: string;
-  nombre_usuario?: string;
+  primer_nombre?: string;
+  segundo_nombre?: string;
+  primer_apellido?: string;
+  segundo_apellido?: string;
   activo?: boolean;
   es_admin?: boolean;
 }
