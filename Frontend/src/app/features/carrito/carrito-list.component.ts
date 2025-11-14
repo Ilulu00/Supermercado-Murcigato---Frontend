@@ -5,7 +5,7 @@ import { PaginationParams } from '../../core/models/api-response.model';
 import { CarritoService } from '../../core/services/carrito.service';
 import { FacturaService } from '../../core/services/factura.service';
 import { ProductoService } from '../../core/services/producto.service';
-import { CarritoConDetalles, CarritoFilters, CreateCarritoRequest, UpdateDetalle_carritoRequest } from '../../shared/models/carrito.model';
+import { CarritoConDetalles, CarritoFilters, CreateCarritoRequest } from '../../shared/models/carrito.model';
 import { CreateFactura } from '../../shared/models/factura.model';
 import { Producto } from '../../shared/models/producto.model';
 
@@ -47,9 +47,13 @@ export class CarritoListComponent implements OnInit {
     
     ngOnInit(): void {
         this.loadCarritos();
-        /*this.productoService.getProductos().subscribe(data => {
-            this.productos = data;
-        });*/
+
+        const pagination = { page: 0, limit: 9999 };
+        const filters = {};
+        this.productoService.getProductos(pagination, filters).subscribe((resp: any) => {
+            this.productos = resp?.data ?? [];
+        });
+        
     }
 
     get detalles(): FormArray {
@@ -64,8 +68,10 @@ export class CarritoListComponent implements OnInit {
         };
 
         this.carritoService.getCarritos(pagination, this.filters).subscribe({
-            next: (carritos) => {
-                this.carritos = carritos;
+            next: (response) => {
+                this.carritos = response.data;
+                this.totalPages = response.totalPages;
+                this.currentPage = response.currentPage;
                 this.loading = false;
         },
         error: (err) => {
@@ -76,10 +82,9 @@ export class CarritoListComponent implements OnInit {
                 this.carritos = [{
                     id_carrito: 'afea1-fafaf4-f1dnu-q2wsf5',
                     id_usuario: '28edjj-afoje2-afiqf2-fofq1',
-                    id_detalle: '13ews3-13esfh7-3sa-f1f321',
-                    id_producto: 'faf095-495jf-40fkla0-013',
-                    cantidad: 5,
                     activo: true,
+                    detalles: [],
+                    subtotal_general: 0.0,
                     fecha_crea: new Date().toISOString(),
                     fecha_actual: new Date().toISOString()
                 }];
@@ -111,10 +116,10 @@ export class CarritoListComponent implements OnInit {
     openCreateModal(): void {
         this.editingCarrito = null;
         this.carritoForm.reset({
-            id_detalle: '',
-            id_producto: '',
-            cantidad: 0
+            id_usuario: '',
+            activo: true
         });
+        this.detalles.clear();
         this.showModal = true;
     }
 
@@ -128,8 +133,9 @@ export class CarritoListComponent implements OnInit {
         CarritoYDetalles.detalles?.forEach(det =>{
             this.detalles.push(
                 this.fb.group({
-                    id_producto: [det.id_producto],
                     id_detalle: [det.id_detalle],
+                    id_producto: [det.id_producto],
+                    nombre_producto: [det.nombre_producto],
                     cantidad: [det.cantidad],
                     precio_producto: [det.precio_producto],
                     subtotal: [det.cantidad * det.precio_producto]
@@ -152,23 +158,56 @@ export class CarritoListComponent implements OnInit {
         }
         const formValue = this.carritoForm.value;
 
+        //aqui ya se abre pa editar cada detalle
         if(this.editingCarrito) {
-            //aqui ya se abre pa editar cada detalle
+            const carrito = this.editingCarrito;
             const detalles = this.detalles.value;
+            let pending = detalles.length;
+            if (pending === 0) {
+                this.loadCarritos();
+                this.closeModal();
+            }
 
             detalles.forEach((det: any) => {
-                const updateData: UpdateDetalle_carritoRequest = {
-                    id_producto: det.id_producto,
+                //Para crear el detalle nuevo
+                if(!det.id_detalle || det.id_detalle === ' '){
+                    const newDetalle = {
+                        id_carrito: carrito.id_carrito,
+                        id_producto: det.id_producto,
+                        cantidad: det.cantidad
+                    };
+
+                    this.carritoService.createDetalle_carrito(newDetalle).subscribe({
+                        next: () => {
+                            pending--;
+                            if(pending === 0){
+                                this.loadCarritos();
+                                this.closeModal();
+                            }
+                        },
+                        error: (err) => console.log('Hubo un error al crear el detalle: ', err)
+                    });
+                    return;
+                }
+                //por si hay detalles existentes
+                const updateData = {
                     cantidad: det.cantidad
                 };
-                
-                this.carritoService.updateDetalle_carrito(det.id_detalle, updateData).subscribe();
+
+                this.carritoService.updateDetalle_carrito(det.id_detalle, updateData).subscribe({
+                    next: () => {
+                        pending--;
+                        if(pending === 0){
+                            this.loadCarritos();
+                            this.closeModal();
+                        }
+                    },
+                    error: (err) => console.log('Hubo un error al actualizar el detalle: ', err)
+                });
             });
-            this.loadCarritos();
-            this.closeModal();
         } else {
-            //entra por aqui por si no hay carritos creados :v
-            const newCarrito: CreateCarritoRequest = {
+            //si no, se crea un carrito
+            const newCarrito : CreateCarritoRequest = {
                 id_usuario: formValue.id_usuario,
                 activo: formValue.activo
             };
@@ -176,15 +215,16 @@ export class CarritoListComponent implements OnInit {
             this.carritoService.createCarrito(newCarrito).subscribe({
                 next: () => {
                     this.loadCarritos();
-                    this.closeModal()
+                    this.closeModal();
                 },
                 error: (err) => {
-                    console.log('Hubo un error al crear el carrito: ', err);
-                    alert('Perdon, hubo un error al crear su carrito de compras');
+                    console.log('Error al crear el carrito: ', err);
+                    alert('Hubo un error al crear el carrito.');
                 }
             });
         }
     }
+    
 
     eliminarDetalle(index: number): void {
         const detalle = this.detalles.at(index)?.value;
@@ -196,7 +236,8 @@ export class CarritoListComponent implements OnInit {
 
         if(confirm('¿Estas seguro/a de eliminar el producto de tu carrito?')) {
             this.carritoService.deleteDetalle_carrito(detalle.id_detalle).subscribe({
-                next: () => this.detalles.removeAt(index),
+                next: () => {this.detalles.removeAt(index);
+                this.loadCarritos();},
                 error: (err) => console.log('Erorr, eliminando detalle: ', err)
             });
         }
@@ -223,7 +264,7 @@ export class CarritoListComponent implements OnInit {
             })
         )
     }
-/*
+
     onSelectProducto(index: number): void {
         const detalleForm = this.detalles.at(index);
 
@@ -237,7 +278,7 @@ export class CarritoListComponent implements OnInit {
             this.updateSubtotal(index); 
         }
     }
-*/
+
     desactivarCarrito(carrito: CarritoConDetalles): void {
         this.carritoService.disableCarrito(carrito.id_carrito).subscribe({
             next: () => {
@@ -276,9 +317,3 @@ export class CarritoListComponent implements OnInit {
 
 
 }          
-
-
-
-
-
-

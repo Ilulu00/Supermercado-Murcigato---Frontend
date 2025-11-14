@@ -57,4 +57,5 @@ export interface ProductoListResponse {
   totalPages: number;
   currentPage: number;
   totalItems: number;
+  size: number;
 }
