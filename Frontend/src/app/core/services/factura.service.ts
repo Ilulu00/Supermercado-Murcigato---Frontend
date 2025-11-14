@@ -5,8 +5,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
     CreateFactura,
-    Factura,
-    FacturaFilters
+    FacturaFilters,
+    FacturaListResponse,
+    RespuestaFactura
 } from '../../shared/models/factura.model';
 import { PaginationParams } from '../models/api-response.model';
 import { ApiService } from './api.service';
@@ -17,16 +18,25 @@ export class FacturaService {
 
     constructor(private apiService: ApiService) { }
 
-    getFacturas(pagination: PaginationParams, filters?: FacturaFilters): Observable<Factura[]> {
-        return this.apiService.getPaginated<Factura>(this.facturaEndpoint, pagination, filters)
+    getFacturas(pagination: PaginationParams, filters?: FacturaFilters): Observable<FacturaListResponse> {
+        const params : any = {
+            page: pagination.page,
+            limit: pagination.limit
+        };
+
+        if(filters) {
+            if(filters.id_usuario) params.id_usuario = filters.id_usuario;
+            if(filters.activo !== undefined) params.activo = filters.activo;
+        }
+        return this.apiService.get<FacturaListResponse>(this.facturaEndpoint, { params })
     }
 
-    generateFactura(factura: CreateFactura): Observable<Factura> {
-        return this.apiService.post<Factura>(this.facturaEndpoint, factura)
+    generateFactura(factura: CreateFactura): Observable<RespuestaFactura> {
+        return this.apiService.post<RespuestaFactura>(this.facturaEndpoint, factura)
     }
 
-    disableFactura(id_factura: string): Observable<Factura> {
-        return this.apiService.patch<Factura>(`${this.facturaEndpoint}/${id_factura}`, {activo : false})
+    disableFactura(id_factura: string): Observable<RespuestaFactura> {
+        return this.apiService.patch<RespuestaFactura>(`${this.facturaEndpoint}/${id_factura}`, {activo : false})
     }
 
 }
