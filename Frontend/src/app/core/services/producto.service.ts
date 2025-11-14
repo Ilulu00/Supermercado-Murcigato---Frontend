@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateProductoRequest, Producto, ProductoFilters, UpdateProductoRequest } from '../../shared/models/producto.model';
+import { CreateProductoRequest, Producto, ProductoFilters, UpdateProductoRequest, ProductoListResponse } from '../../shared/models/producto.model';
 import { PaginationParams } from '../models/api-response.model';
 import { ApiService } from './api.service';
 
@@ -15,9 +15,22 @@ export class ProductoService {
   /**
    * Obtiene todos los productos con paginación
    */
-  getProductos(pagination: PaginationParams, filters?: ProductoFilters): Observable<Producto[]> {
-    return this.apiService.getPaginated<Producto>(this.endpoint, pagination, filters);
-  }
+  getProductos(pagination: PaginationParams, filters: ProductoFilters): Observable<ProductoListResponse> {
+    const params : any = {
+            page: pagination.page,
+            limit: pagination.limit
+        };
+
+        if(filters) {
+            if(filters.id_categoria) params.id_categoria = filters.id_categoria;
+            if(filters.nombre_producto) params.nombre_producto = filters.nombre_producto;
+            if(filters.precio_max) params.precio_max = filters.precio_max;
+            if(filters.precio_min) params.precio_min = filters.precio_min;
+            if(filters.stock_min) params.stock_min = filters.stock_min;
+        }
+  return this.apiService.get<ProductoListResponse>(this.endpoint, { params });
+}
+
 
   /**
    * Obtiene un producto por ID
@@ -38,13 +51,6 @@ export class ProductoService {
    */
   updateProducto(id: string, producto: UpdateProductoRequest): Observable<Producto> {
     return this.apiService.put<Producto>(`${this.endpoint}/${id}`, producto);
-  }
-
-  /**
-   * Elimina un producto
-   */
-  deleteProducto(id: string): Observable<any> {
-    return this.apiService.delete<any>(`${this.endpoint}/${id}`);
   }
 
   /**

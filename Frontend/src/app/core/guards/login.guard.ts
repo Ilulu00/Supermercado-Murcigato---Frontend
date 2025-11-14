@@ -10,7 +10,7 @@ export class LoginGuard implements CanActivate {
     private authService: AuthService,
     private router: Router
   ) {}
-
+ 
   canActivate(): boolean {
     // Si ya está autenticado, redirigir al dashboard
     if (this.authService.isAuthenticated()) {

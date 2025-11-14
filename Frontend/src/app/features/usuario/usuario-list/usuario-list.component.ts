@@ -18,9 +18,9 @@ export class UsuarioListComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   pageSize = 10;
-  
+
   filters: UsuarioFilters = {};
-  
+
   // Modal properties
   showModal = false;
   editingUsuario: Usuario | null = null;
@@ -30,12 +30,15 @@ export class UsuarioListComponent implements OnInit {
     private usuarioService: UsuarioService,
     private fb: FormBuilder
   ) {
+    
     this.usuarioForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(2)]],
-      nombre_usuario: ['', [Validators.required, Validators.minLength(3)]],
+      primer_nombre: ['', [Validators.required, Validators.minLength(2)]],
+      segundo_nombre: [''],
+      primer_apellido: ['', [Validators.required, Validators.minLength(2)]],
+      segundo_apellido: [''],
       email: ['', [Validators.required, Validators.email]],
       telefono: [''],
-      contraseña: [''],
+      contraseña: ['', [Validators.required, Validators.minLength(8)]],
       es_admin: [false]
     });
   }
@@ -63,9 +66,11 @@ export class UsuarioListComponent implements OnInit {
           console.log('Backend no disponible, usando datos mock para usuarios');
           this.usuarios = [{
             id: '1',
-            nombre: 'Administrador',
-            nombre_usuario: 'admin',
-            email: 'admin@itm.edu.co',
+            primer_nombre: 'Administrador',
+            segundo_nombre: '',
+            primer_apellido: 'Mock',
+            segundo_apellido: '',
+            email: 'admin@mock.com',
             telefono: '',
             activo: true,
             es_admin: true,
@@ -100,8 +105,10 @@ export class UsuarioListComponent implements OnInit {
   openCreateModal(): void {
     this.editingUsuario = null;
     this.usuarioForm.reset({
-      nombre: '',
-      nombre_usuario: '',
+      primer_nombre: '',
+      segundo_nombre: '',
+      primer_apellido: '',
+      segundo_apellido: '',
       email: '',
       telefono: '',
       contraseña: '',
@@ -113,8 +120,10 @@ export class UsuarioListComponent implements OnInit {
   editUsuario(usuario: Usuario): void {
     this.editingUsuario = usuario;
     this.usuarioForm.patchValue({
-      nombre: usuario.nombre,
-      nombre_usuario: usuario.nombre_usuario,
+      primer_nombre: usuario.primer_nombre,
+      segundo_nombre: usuario.segundo_nombre,
+      primer_apellido: usuario.primer_apellido,
+      segundo_apellido: usuario.segundo_apellido,
       email: usuario.email,
       telefono: usuario.telefono || '',
       contraseña: '',
@@ -145,13 +154,15 @@ export class UsuarioListComponent implements OnInit {
     if (this.editingUsuario) {
       // Actualizar usuario existente
       const updateData: UpdateUsuarioRequest = {
-        nombre: formValue.nombre,
-        nombre_usuario: formValue.nombre_usuario,
+        primer_nombre: formValue.primer_nombre,
+        segundo_nombre: formValue.segundo_nombre,
+        primer_apellido: formValue.primer_apellido,
+        segundo_apellido: formValue.segundo_apellido,
         email: formValue.email,
         telefono: formValue.telefono,
         es_admin: formValue.es_admin
       };
-      
+
       this.usuarioService.updateUsuario(this.editingUsuario.id, updateData).subscribe({
         next: () => {
           this.loadUsuarios();
@@ -165,16 +176,17 @@ export class UsuarioListComponent implements OnInit {
     } else {
       // Crear nuevo usuario
       const newUsuario: CreateUsuarioRequest = {
-        nombre: formValue.nombre,
-        nombre_usuario: formValue.nombre_usuario,
+        primer_nombre: formValue.primer_nombre,
+        segundo_nombre: formValue.segundo_nombre,
+        primer_apellido: formValue.primer_apellido,
+        segundo_apellido: formValue.segundo_apellido,
         email: formValue.email,
         telefono: formValue.telefono,
-        contraseña: formValue.contraseña,
+        contrasena: formValue.contraseña,
         password: formValue.contraseña, // Alias for frontend compatibility
-        apellido: formValue.apellido || '', // Add missing field
         es_admin: formValue.es_admin
       };
-      
+
       this.usuarioService.createUsuario(newUsuario).subscribe({
         next: () => {
           this.loadUsuarios();
@@ -183,20 +195,6 @@ export class UsuarioListComponent implements OnInit {
         error: (error) => {
           console.error('Error al crear usuario:', error);
           alert('Error al crear el usuario');
-        }
-      });
-    }
-  }
-
-  deleteUsuario(usuario: Usuario): void {
-    if (confirm(`¿Está seguro de eliminar el usuario "${usuario.email}"?`)) {
-      this.usuarioService.deleteUsuario(usuario.id).subscribe({
-        next: () => {
-          this.loadUsuarios();
-        },
-        error: (error) => {
-          console.error('Error al eliminar usuario:', error);
-          alert('Error al eliminar el usuario');
         }
       });
     }

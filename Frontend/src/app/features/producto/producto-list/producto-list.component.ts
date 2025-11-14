@@ -18,20 +18,18 @@ export class ProductoListComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   pageSize = 10;
-  
+
   filters: ProductoFilters = {};
-  
+
   // Modal properties
   showModal = false;
   editingProducto: Producto | null = null;
   productoForm = {
-    nombre: '',
-    descripcion: '',
-    precio: 0,
+    nombre_producto: '',
+    precio_producto: 0,
     stock: 0,
-    categoria_id: '',
-    usuario_id: '',
-    activo: true
+    id_categoria: '',
+    id_proveedor: '',
   };
 
   constructor(private productoService: ProductoService) { }
@@ -48,10 +46,10 @@ export class ProductoListComponent implements OnInit {
     };
 
     this.productoService.getProductos(pagination, this.filters).subscribe({
-      next: (productos) => {
-        this.productos = productos;
-        // Since backend doesn't provide pagination info, we'll set a default
-        this.totalPages = Math.ceil(productos.length / this.pageSize);
+      next: (resp) => {
+        this.productos = resp.data;
+        this.totalPages = resp.totalPages;
+        this.currentPage = resp.currentPage;
         this.loading = false;
       },
       error: (error) => {
@@ -62,18 +60,16 @@ export class ProductoListComponent implements OnInit {
           this.productos = [{
             id_producto: '1',
             id: '1',
-            nombre: 'Laptop Dell Inspiron',
-            descripcion: 'Laptop para trabajo y entretenimiento',
-            precio: 2500000,
+            nombre_producto: 'Agility Gold cuidado especial para la piel perros',
+            precio_producto: 70000,
             stock: 15,
-            categoria_id: '1',
-            usuario_id: '1',
-            activo: true,
+            id_categoria: '1',
+            id_proveedor: '1',
             categoria: {
-              nombre: 'Tecnología'
+              nombre: 'Mascotas'
             },
             fecha_creacion: new Date().toISOString(),
-            fecha_edicion: new Date().toISOString()
+            fecha_actualizacion: new Date().toISOString()
           }];
           this.totalPages = 1;
         }
@@ -103,13 +99,11 @@ export class ProductoListComponent implements OnInit {
   openCreateModal(): void {
     this.editingProducto = null;
     this.productoForm = {
-      nombre: '',
-      descripcion: '',
-      precio: 0,
+      nombre_producto: '',
+      precio_producto: 0,
       stock: 0,
-      categoria_id: '',
-      usuario_id: '',
-      activo: true
+      id_categoria: '',
+      id_proveedor: '',
     };
     this.showModal = true;
   }
@@ -117,13 +111,11 @@ export class ProductoListComponent implements OnInit {
   editProducto(producto: Producto): void {
     this.editingProducto = producto;
     this.productoForm = {
-      nombre: producto.nombre,
-      descripcion: producto.descripcion || '',
-      precio: producto.precio,
+      nombre_producto: producto.nombre_producto,
+      precio_producto: producto.precio_producto,
       stock: producto.stock,
-      categoria_id: producto.categoria_id,
-      usuario_id: producto.usuario_id,
-      activo: producto.activo
+      id_categoria: producto.id_categoria,
+      id_proveedor: producto.id_proveedor,
     };
     this.showModal = true;
   }
@@ -132,34 +124,30 @@ export class ProductoListComponent implements OnInit {
     this.showModal = false;
     this.editingProducto = null;
     this.productoForm = {
-      nombre: '',
-      descripcion: '',
-      precio: 0,
+      nombre_producto: '',
+      precio_producto: 0,
       stock: 0,
-      categoria_id: '',
-      usuario_id: '',
-      activo: true
+      id_categoria: '',
+      id_proveedor: '',
     };
   }
 
   saveProducto(): void {
-    if (!this.productoForm.nombre.trim() || this.productoForm.precio <= 0 || this.productoForm.stock < 0 || !this.productoForm.categoria_id || !this.productoForm.usuario_id) {
-      alert('Nombre, precio, stock, categoría y usuario son requeridos');
+    if (!this.productoForm.nombre_producto.trim() || this.productoForm.precio_producto <= 0 || this.productoForm.stock < 0 || !this.productoForm.id_categoria || !this.productoForm.id_proveedor) {
+      alert('Nombre, precio, stock, categoría y proveedor son requeridos');
       return;
     }
 
     if (this.editingProducto) {
       // Actualizar producto existente
       const updateData = {
-        nombre: this.productoForm.nombre,
-        descripcion: this.productoForm.descripcion,
-        precio: this.productoForm.precio,
+        nombre: this.productoForm.nombre_producto,
+        precio: this.productoForm.precio_producto,
         stock: this.productoForm.stock,
-        categoria_id: this.productoForm.categoria_id,
-        usuario_id: this.productoForm.usuario_id,
-        activo: this.productoForm.activo
+        id_categoria: this.productoForm.id_categoria,
+        id_proveedor: this.productoForm.id_proveedor,
       };
-      
+
       this.productoService.updateProducto(this.editingProducto.id, updateData).subscribe({
         next: () => {
           this.loadProductos();
@@ -173,15 +161,13 @@ export class ProductoListComponent implements OnInit {
     } else {
       // Crear nuevo producto
       const newProducto = {
-        nombre: this.productoForm.nombre,
-        descripcion: this.productoForm.descripcion,
-        precio: this.productoForm.precio,
+        nombre_producto: this.productoForm.nombre_producto,
+        precio_producto: this.productoForm.precio_producto,
         stock: this.productoForm.stock,
-        categoria_id: this.productoForm.categoria_id,
-        usuario_id: this.productoForm.usuario_id,
-        activo: this.productoForm.activo
+        id_categoria: this.productoForm.id_categoria,
+        id_proveedor: this.productoForm.id_proveedor
       };
-      
+
       this.productoService.createProducto(newProducto).subscribe({
         next: () => {
           this.loadProductos();
@@ -190,19 +176,6 @@ export class ProductoListComponent implements OnInit {
         error: (error) => {
           console.error('Error al crear producto:', error);
           alert('Error al crear el producto');
-        }
-      });
-    }
-  }
-
-  deleteProducto(producto: Producto): void {
-    if (confirm(`¿Está seguro de eliminar el producto "${producto.nombre}"?`)) {
-      this.productoService.deleteProducto(producto.id).subscribe({
-        next: () => {
-          this.loadProductos();
-        },
-        error: (error) => {
-          console.error('Error al eliminar producto:', error);
         }
       });
     }

@@ -4,54 +4,49 @@
 export interface Producto {
   id_producto: string; // UUID
   id: string; // Alias for id_producto for frontend compatibility
-  nombre: string;
-  descripcion?: string;
-  precio: number;
+  nombre_producto: string;
+  precio_producto: number;
   stock: number;
-  categoria_id: string; // UUID
-  usuario_id: string; // UUID
-  activo: boolean; // Status field
+  id_categoria: string; // UUID
+  id_proveedor: string; // UUID
   categoria?: { // Optional relationship data
     nombre: string;
   };
   fecha_creacion: string;
-  fecha_edicion?: string;
+  fecha_actualizacion?: string;
 }
 
 /**
  * Modelo para crear un nuevo producto
  */
 export interface CreateProductoRequest {
-  nombre: string;
-  descripcion: string;
-  precio: number;
+  nombre_producto: string;
+  precio_producto: number;
   stock: number;
-  categoria_id: string;
-  usuario_id: string;
+  id_categoria: string;
+  id_proveedor: string;
 }
 
 /**
  * Modelo para actualizar un producto
  */
 export interface UpdateProductoRequest {
-  nombre?: string;
-  descripcion?: string;
-  precio?: number;
+  nombre_producto?: string;
+  precio_producto?: number;
   stock?: number;
-  categoria_id?: string;
-  usuario_id?: string;
+  id_categoria?: string;
+  id_proveedor?: string;
 }
 
 /**
  * Modelo para filtros de productos
  */
 export interface ProductoFilters {
-  nombre?: string;
-  categoria_id?: string;
+  nombre_producto?: string;
+  id_categoria?: string;
   precio_min?: number;
   precio_max?: number;
   stock_min?: number;
-  activo?: boolean; // Status filter
 }
 
 /**
@@ -62,4 +57,5 @@ export interface ProductoListResponse {
   totalPages: number;
   currentPage: number;
   totalItems: number;
+  size: number;
 }
