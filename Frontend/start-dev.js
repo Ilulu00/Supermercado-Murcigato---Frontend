@@ -6,7 +6,7 @@ const path = require('path');
 console.log('🚀 Iniciando servidor de desarrollo Angular...\n');
 
 // Configuración del servidor
-const ngServe = spawn('ng', ['serve', '--open', '--host', '0.0.0.0', '--port', '8000'], {
+const ngServe = spawn('ng', ['serve', '--open', '--host', '0.0.0.0', '--port', '4200'], {
   stdio: 'pipe',
   shell: true,
   cwd: process.cwd()
@@ -22,9 +22,9 @@ ngServe.stdout.on('data', (data) => {
     console.log('\n' + '='.repeat(60));
     console.log('🎉 ¡Servidor Angular iniciado exitosamente!');
     console.log('='.repeat(60));
-    console.log('🌐 URL Local:    http://localhost:8000');
-    console.log('🌍 URL Red:      http://0.0.0.0:8000');
-    console.log('📱 Acceso móvil: http://[tu-ip]:8000');
+    console.log('🌐 URL Local:    http://localhost:4200');
+    console.log('🌍 URL Red:      http://0.0.0.0:4200');
+    console.log('📱 Acceso móvil: http://[tu-ip]:4200');
     console.log('='.repeat(60));
     console.log('💡 Presiona Ctrl+C para detener el servidor\n');
   }
