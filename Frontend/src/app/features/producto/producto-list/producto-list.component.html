@@ -53,10 +53,10 @@
               <td colspan="9" class="text-center">No hay productos disponibles</td>
             </tr>
             <tr *ngFor="let producto of productos">
-              <td>{{ producto.id }}</td>
+              <td>{{ producto.id_producto }}</td>
               <td>{{ producto.nombre_producto }}</td>
               <td>{{ formatearPrecio(producto.precio_producto) }}</td>
-              <td>{{ producto.categoria?.nombre || '-' }}</td>
+              <td>{{ producto.id_categoria || '-' }}</td>
               <td>
                 <span class="badge" [class.badge-success]="producto.stock > 20"
                   [class.badge-warning]="producto.stock > 10 && producto.stock <= 20"

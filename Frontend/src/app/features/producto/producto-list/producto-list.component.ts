@@ -46,10 +46,10 @@ export class ProductoListComponent implements OnInit {
     };
 
     this.productoService.getProductos(pagination, this.filters).subscribe({
-      next: (productos) => {
-        this.productos = productos;
-        // Since backend doesn't provide pagination info, we'll set a default
-        this.totalPages = Math.ceil(productos.length / this.pageSize);
+      next: (resp) => {
+        this.productos = resp.data;
+        this.totalPages = resp.totalPages;
+        this.currentPage = resp.currentPage;
         this.loading = false;
       },
       error: (error) => {

@@ -53,10 +53,11 @@ export class FacturaListComponent implements OnInit{
         };
 
         this.facturaService.getFacturas(pagination, this.filters).subscribe({
-            next: (facturas) => {
-                this.facturas = facturas;
-                this.loading = false;
-            },
+            next: (resp) => {
+            this.facturas = resp.data;
+            this.totalPages = resp.totalPages;
+            this.currentPage = resp.currentPage;
+        },
             error: (err) =>{
                 console.log('Error al cargar las facturas: ', err);
                 this.loading = false;
