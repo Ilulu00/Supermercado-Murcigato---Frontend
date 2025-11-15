@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateProductoRequest, Producto, ProductoFilters, UpdateProductoRequest, ProductoListResponse } from '../../shared/models/producto.model';
+import { CreateProductoRequest, Producto, ProductoFilters, ProductoListResponse, UpdateProductoRequest } from '../../shared/models/producto.model';
 import { PaginationParams } from '../models/api-response.model';
 import { ApiService } from './api.service';
 
@@ -35,8 +35,8 @@ export class ProductoService {
   /**
    * Obtiene un producto por ID
    */
-  getProductoById(id: string): Observable<Producto> {
-    return this.apiService.get<Producto>(`${this.endpoint}/${id}`);
+  getProductoById(id_producto: string): Observable<Producto> {
+    return this.apiService.get<Producto>(`${this.endpoint}/${id_producto}`);
   }
 
   /**
@@ -49,35 +49,35 @@ export class ProductoService {
   /**
    * Actualiza un producto existente
    */
-  updateProducto(id: string, producto: UpdateProductoRequest): Observable<Producto> {
-    return this.apiService.put<Producto>(`${this.endpoint}/${id}`, producto);
+  updateProducto(id_producto: string, producto: UpdateProductoRequest): Observable<Producto> {
+    return this.apiService.put<Producto>(`${this.endpoint}/${id_producto}`, producto);
   }
 
   /**
    * Obtiene productos por categoría
    */
-  getProductosByCategoria(categoriaId: string): Observable<Producto[]> {
-    return this.apiService.get<Producto[]>(`${this.endpoint}/categoria/${categoriaId}`);
+  getProductosByCategoria(id_categoria: string): Observable<Producto[]> {
+    return this.apiService.get<Producto[]>(`${this.endpoint}/categoria/${id_categoria}`);
   }
 
   /**
    * Obtiene productos por usuario
    */
-  getProductosByUsuario(usuarioId: string): Observable<Producto[]> {
-    return this.apiService.get<Producto[]>(`${this.endpoint}/usuario/${usuarioId}`);
+  getProductosByUsuario(id_usuario: string): Observable<Producto[]> {
+    return this.apiService.get<Producto[]>(`${this.endpoint}/usuario/${id_usuario}`);
   }
 
   /**
    * Busca productos por nombre
    */
-  buscarProductos(nombre: string): Observable<Producto[]> {
-    return this.apiService.get<Producto[]>(`${this.endpoint}/buscar/${nombre}`);
+  buscarProductos(nombre_producto: string): Observable<Producto[]> {
+    return this.apiService.get<Producto[]>(`${this.endpoint}/buscar/${nombre_producto}`);
   }
 
   /**
    * Actualiza el stock de un producto
    */
-  actualizarStock(id: string, nuevoStock: number): Observable<Producto> {
-    return this.apiService.patch<Producto>(`${this.endpoint}/${id}/stock`, { stock: nuevoStock });
+  actualizarStock(id_producto: string, nuevoStock: number): Observable<Producto> {
+    return this.apiService.patch<Producto>(`${this.endpoint}/${id_producto}/stock`, { stock: nuevoStock });
   }
 }

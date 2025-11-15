@@ -36,15 +36,15 @@ export class UsuarioService {
   /**
    * Obtiene un usuario por ID
    */
-  getUsuarioById(id: string): Observable<Usuario> {
-    return this.apiService.get<Usuario>(`${this.endpoint}/${id}`);
+  getUsuarioById(id_usuario: string): Observable<Usuario> {
+    return this.apiService.get<Usuario>(`${this.endpoint}/${id_usuario}`);
   }
 
   /**
    * Obtiene un usuario por email
    */
-  getUsuarioByEmail(email: string): Observable<Usuario> {
-    return this.apiService.get<Usuario>(`${this.endpoint}/email/${email}`);
+  getUsuarioByEmail(correo: string): Observable<Usuario> {
+    return this.apiService.get<Usuario>(`${this.endpoint}/correo/${correo}`);
   }
 
   /**
@@ -57,15 +57,15 @@ export class UsuarioService {
   /**
    * Actualiza un usuario existente
    */
-  updateUsuario(id: string, usuario: UpdateUsuarioRequest): Observable<Usuario> {
-    return this.apiService.put<Usuario>(`${this.endpoint}/${id}`, usuario);
+  updateUsuario(id_usuario: string, usuario: UpdateUsuarioRequest): Observable<Usuario> {
+    return this.apiService.put<Usuario>(`${this.endpoint}/${id_usuario}`, usuario);
   }
 
   /**
    * Desactiva un usuario (soft delete)
    */
-  desactivarUsuario(id: string): Observable<Usuario> {
-    return this.apiService.patch<Usuario>(`${this.endpoint}/${id}/desactivar`, {});
+  desactivarUsuario(id_usuario: string): Observable<Usuario> {
+    return this.apiService.patch<Usuario>(`${this.endpoint}/${id_usuario}/desactivar`, {});
   }
 
   /**
@@ -78,7 +78,7 @@ export class UsuarioService {
   /**
    * Verifica si un usuario es administrador
    */
-  verificarEsAdmin(id: string): Observable<any> {
-    return this.apiService.get<any>(`${this.endpoint}/${id}/es-admin`);
+  verificarEsAdmin(id_usuario: string): Observable<any> {
+    return this.apiService.get<any>(`${this.endpoint}/${id_usuario}/es-admin`);
   }
 }

@@ -43,8 +43,9 @@ export interface FacturaFilters{
  */
 
 export interface FacturaListResponse{
-data: RespuestaFactura[]
-  totalPages: number;
-  currentPage: number;
-  totalItems: number;
+    data: RespuestaFactura[]
+    totalPages: number;
+    currentPage: number;
+    totalItems: number;
+    size: number;
 }

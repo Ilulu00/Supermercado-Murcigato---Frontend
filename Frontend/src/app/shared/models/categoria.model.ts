@@ -3,8 +3,7 @@
  */
 export interface Categoria {
   id_categoria: string; // UUID
-  id: string; // Alias for id_categoria for frontend compatibility
-  nombre: string;
+  nombre_categoria: string;
   descripcion?: string;
   fecha_creacion: string;
   fecha_edicion?: string;
@@ -14,23 +13,25 @@ export interface Categoria {
  * Modelo para crear una nueva categoría
  */
 export interface CreateCategoriaRequest {
-  nombre: string;
+  nombre_categoria: string;
   descripcion?: string;
+  fecha_creacion: string;
 }
 
 /**
  * Modelo para actualizar una categoría
  */
 export interface UpdateCategoriaRequest {
-  nombre?: string;
+  nombre_categoria?: string;
   descripcion?: string;
+  fecha_edicion: string;
 }
 
 /**
  * Modelo para filtros de categorías
  */
 export interface CategoriaFilters {
-  nombre?: string;
+  nombre_categoria?: string;
 }
 
 /**
@@ -41,4 +42,5 @@ export interface CategoriaListResponse {
   totalPages: number;
   currentPage: number;
   totalItems: number;
+  size: number;
 }

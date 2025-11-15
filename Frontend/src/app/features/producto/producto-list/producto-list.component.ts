@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CategoriaService } from 'src/app/core/services/categoria.service';
 import { PaginationParams } from '../../../core/models/api-response.model';
 import { ProductoService } from '../../../core/services/producto.service';
+import { ProveedorService } from '../../../core/services/proveedor.service';
+import { Categoria } from '../../../shared/models/categoria.model';
 import { Producto, ProductoFilters } from '../../../shared/models/producto.model';
-
+import { Proveedor } from '../../../shared/models/proveedor.models';
 @Component({
   selector: 'app-producto-list',
   standalone: true,
@@ -18,6 +21,8 @@ export class ProductoListComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   pageSize = 10;
+  proveedores: Proveedor[] = []
+  categorias: Categoria[] = []
 
   filters: ProductoFilters = {};
 
@@ -30,12 +35,43 @@ export class ProductoListComponent implements OnInit {
     stock: 0,
     id_categoria: '',
     id_proveedor: '',
+    fecha_creacion: new Date().toISOString(),
+    fecha_actualizacion: new Date().toISOString() ?? ' - '
   };
 
-  constructor(private productoService: ProductoService) { }
+  constructor(
+    private productoService: ProductoService,
+    private proveedorService: ProveedorService,
+    private categoriaService: CategoriaService
+  ) { }
 
   ngOnInit(): void {
     this.loadProductos();
+    this.getProveedores();
+    this.getCategorias();
+  }
+
+  getCategorias(): void {
+    const pagination = { page: 0, limit: 9999 };
+    this.categoriaService.getCategorias(pagination, {}).subscribe(
+      res => {
+        this.categorias = res.data;
+        console.log('Categorias cargadas: ', this.categorias);
+      },
+      err => {
+        console.log('Error al cargar las categorias: ', err);
+      }
+    );
+  }
+
+  getProveedores(): void {
+    const pagination = { page: 0, limit: 9999 };
+    this.proveedorService.getProveedores(pagination, {}).subscribe(
+      resp => {
+        this.proveedores = resp.data;
+        console.log('Proveedores cargados god: ', this.proveedores)
+      }
+    )
   }
 
   loadProductos(): void {
@@ -59,7 +95,6 @@ export class ProductoListComponent implements OnInit {
           console.log('Backend no disponible, usando datos mock para productos');
           this.productos = [{
             id_producto: '1',
-            id: '1',
             nombre_producto: 'Agility Gold cuidado especial para la piel perros',
             precio_producto: 70000,
             stock: 15,
@@ -104,6 +139,8 @@ export class ProductoListComponent implements OnInit {
       stock: 0,
       id_categoria: '',
       id_proveedor: '',
+      fecha_creacion: new Date().toISOString(),
+      fecha_actualizacion: new Date().toISOString() ?? ' - '
     };
     this.showModal = true;
   }
@@ -116,6 +153,8 @@ export class ProductoListComponent implements OnInit {
       stock: producto.stock,
       id_categoria: producto.id_categoria,
       id_proveedor: producto.id_proveedor,
+      fecha_creacion: new Date().toISOString(),
+      fecha_actualizacion: new Date().toISOString() ?? ' - '
     };
     this.showModal = true;
   }
@@ -129,6 +168,8 @@ export class ProductoListComponent implements OnInit {
       stock: 0,
       id_categoria: '',
       id_proveedor: '',
+      fecha_creacion: new Date().toISOString(),
+      fecha_actualizacion: new Date().toISOString() ?? ' - '
     };
   }
 
@@ -146,9 +187,11 @@ export class ProductoListComponent implements OnInit {
         stock: this.productoForm.stock,
         id_categoria: this.productoForm.id_categoria,
         id_proveedor: this.productoForm.id_proveedor,
+        fecha_creacion: this.productoForm.fecha_creacion,
+        fecha_actualizacion: this.productoForm.fecha_actualizacion
       };
 
-      this.productoService.updateProducto(this.editingProducto.id, updateData).subscribe({
+      this.productoService.updateProducto(this.editingProducto.id_producto, updateData).subscribe({
         next: () => {
           this.loadProductos();
           this.closeModal();
@@ -165,7 +208,8 @@ export class ProductoListComponent implements OnInit {
         precio_producto: this.productoForm.precio_producto,
         stock: this.productoForm.stock,
         id_categoria: this.productoForm.id_categoria,
-        id_proveedor: this.productoForm.id_proveedor
+        id_proveedor: this.productoForm.id_proveedor,
+        fecha_creacion: this.productoForm.fecha_creacion
       };
 
       this.productoService.createProducto(newProducto).subscribe({
