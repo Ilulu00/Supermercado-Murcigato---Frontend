@@ -9,10 +9,10 @@ import { FacturaFilters, RespuestaFactura } from '../../shared/models/factura.mo
     selector: 'app-factura-list',
     standalone: true,
     imports: [CommonModule, FormsModule, ReactiveFormsModule],
-    templateUrl: './factura-list-component.html',
-    styleUrl: './factura-list-component.scss'
+    templateUrl: './factura-list.component.html',
+    styleUrl: './factura-list.component.scss'
 })
-export class FacturaListComponent implements OnInit{
+export class FacturaListComponent implements OnInit {
     facturas: RespuestaFactura[] = [];
     loading = false;
     currentPage = 1;
@@ -29,8 +29,8 @@ export class FacturaListComponent implements OnInit{
     constructor(
         private facturaService: FacturaService,
         private fb: FormBuilder
-    )  {
-        this.facturaForm = this.fb.group({ 
+    ) {
+        this.facturaForm = this.fb.group({
             id_usuario: [''],
             id_carrito: [''],
             metodo_pago: [''],
@@ -54,11 +54,11 @@ export class FacturaListComponent implements OnInit{
 
         this.facturaService.getFacturas(pagination, this.filters).subscribe({
             next: (resp) => {
-            this.facturas = resp.data;
-            this.totalPages = resp.totalPages;
-            this.currentPage = resp.currentPage;
-        },
-            error: (err) =>{
+                this.facturas = resp.data;
+                this.totalPages = resp.totalPages;
+                this.currentPage = resp.currentPage;
+            },
+            error: (err) => {
                 console.log('Error al cargar las facturas: ', err);
                 this.loading = false;
             }
@@ -88,6 +88,12 @@ export class FacturaListComponent implements OnInit{
         this.facturaForm.reset({
             id_factura: ''
         })
+    }
+
+    closeModal(): void {
+        this.showModal = false;
+        this.editingFactura = null;
+        this.facturaForm.reset();
     }
 
 

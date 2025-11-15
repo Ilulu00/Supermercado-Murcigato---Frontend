@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { RouterModule } from '@angular/router';
+
 
 declare interface RouteInfo {
   path: string;
@@ -32,24 +32,14 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
   menuItems: any[] = [];
 
-  constructor(
-    public authService: AuthService,
-    private router: Router
-  ) { }
 
   ngOnInit() {
     this.menuItems = ROUTES.filter(menuItem => this.canAccessMenuItem(menuItem));
   }
 
   canAccessMenuItem(menuItem: RouteInfo): boolean {
-    // Si no tiene roles definidos, todos pueden acceder
-    if (!menuItem.roles || menuItem.roles.length === 0) {
-      return true;
-    }
+    return true;
 
-    // Verificar si el usuario actual tiene alguno de los roles requeridos
-    const userRole = this.authService.getUserRole();
-    return userRole ? menuItem.roles.includes(userRole) : false;
   }
 
   isMobileMenu() {
@@ -59,8 +49,4 @@ export class SidebarComponent implements OnInit {
     return true;
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/auth/login']);
-  }
 }

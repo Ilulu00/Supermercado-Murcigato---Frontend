@@ -36,9 +36,8 @@ export class UsuarioListComponent implements OnInit {
       segundo_nombre: [''],
       primer_apellido: ['', [Validators.required, Validators.minLength(2)]],
       segundo_apellido: [''],
-      email: ['', [Validators.required, Validators.email]],
+      correo: [''],
       telefono: [''],
-      contraseña: ['', [Validators.required, Validators.minLength(8)]],
       es_admin: [false]
     });
   }
@@ -48,15 +47,17 @@ export class UsuarioListComponent implements OnInit {
   }
 
   loadUsuarios(): void {
-    this.loading = true;
+    this.loading = true; 
     const pagination: PaginationParams = {
       page: this.currentPage,
       limit: this.pageSize
     };
 
     this.usuarioService.getUsuarios(pagination, this.filters).subscribe({
-      next: (usuarios) => {
-        this.usuarios = usuarios;
+      next: (resp) => {
+        this.usuarios = resp.data;
+        this.totalPages = resp.totalPages;
+        this.currentPage = resp.currentPage;
         this.loading = false;
       },
       error: (error) => {
@@ -65,16 +66,16 @@ export class UsuarioListComponent implements OnInit {
         if (error.status === 0 || error.status === undefined) {
           console.log('Backend no disponible, usando datos mock para usuarios');
           this.usuarios = [{
-            id: '1',
+            id_usuario: '1',
             primer_nombre: 'Administrador',
             segundo_nombre: '',
             primer_apellido: 'Mock',
             segundo_apellido: '',
-            email: 'admin@mock.com',
+            correo: 'admin@mock.com',
             telefono: '',
             activo: true,
             es_admin: true,
-            fecha_creacion: new Date().toISOString(),
+            fecha_registro: new Date().toISOString(),
             fecha_edicion: new Date().toISOString()
           }];
           this.totalPages = 1;
@@ -109,9 +110,8 @@ export class UsuarioListComponent implements OnInit {
       segundo_nombre: '',
       primer_apellido: '',
       segundo_apellido: '',
-      email: '',
+      correo: '',
       telefono: '',
-      contraseña: '',
       es_admin: false
     });
     this.showModal = true;
@@ -124,9 +124,8 @@ export class UsuarioListComponent implements OnInit {
       segundo_nombre: usuario.segundo_nombre,
       primer_apellido: usuario.primer_apellido,
       segundo_apellido: usuario.segundo_apellido,
-      email: usuario.email,
+      correo: usuario.correo,
       telefono: usuario.telefono || '',
-      contraseña: '',
       es_admin: usuario.es_admin
     });
     this.showModal = true;
@@ -144,11 +143,6 @@ export class UsuarioListComponent implements OnInit {
       return;
     }
 
-    if (!this.editingUsuario && !this.usuarioForm.get('contraseña')?.value) {
-      alert('La contraseña es requerida para nuevos usuarios');
-      return;
-    }
-
     const formValue = this.usuarioForm.value;
 
     if (this.editingUsuario) {
@@ -158,12 +152,12 @@ export class UsuarioListComponent implements OnInit {
         segundo_nombre: formValue.segundo_nombre,
         primer_apellido: formValue.primer_apellido,
         segundo_apellido: formValue.segundo_apellido,
-        email: formValue.email,
+        correo: formValue.correo,
         telefono: formValue.telefono,
         es_admin: formValue.es_admin
       };
 
-      this.usuarioService.updateUsuario(this.editingUsuario.id, updateData).subscribe({
+      this.usuarioService.updateUsuario(this.editingUsuario.id_usuario, updateData).subscribe({
         next: () => {
           this.loadUsuarios();
           this.closeModal();
@@ -180,10 +174,8 @@ export class UsuarioListComponent implements OnInit {
         segundo_nombre: formValue.segundo_nombre,
         primer_apellido: formValue.primer_apellido,
         segundo_apellido: formValue.segundo_apellido,
-        email: formValue.email,
+        correo: formValue.correo,
         telefono: formValue.telefono,
-        contrasena: formValue.contraseña,
-        password: formValue.contraseña, // Alias for frontend compatibility
         es_admin: formValue.es_admin
       };
 
@@ -201,8 +193,8 @@ export class UsuarioListComponent implements OnInit {
   }
 
   desactivarUsuario(usuario: Usuario): void {
-    if (confirm(`¿Está seguro de desactivar el usuario "${usuario.email}"?`)) {
-      this.usuarioService.desactivarUsuario(usuario.id).subscribe({
+    if (confirm(`¿Está seguro de desactivar el usuario "${usuario.correo}"?`)) {
+      this.usuarioService.desactivarUsuario(usuario.id_usuario).subscribe({
         next: () => {
           this.loadUsuarios();
         },
