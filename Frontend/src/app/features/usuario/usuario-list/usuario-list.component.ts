@@ -199,17 +199,19 @@ export class UsuarioListComponent implements OnInit {
     }
   }
 
-  desactivarUsuario(usuario: Usuario): void {
-    if (confirm(`¿Está seguro de desactivar el usuario "${usuario.correo}"?`)) {
-      this.usuarioService.desactivarUsuario(usuario.id_usuario).subscribe({
-        next: () => {
-          this.loadUsuarios();
-        },
-        error: (error) => {
-          console.error('Error al desactivar usuario:', error);
-          alert('Error al desactivar el usuario');
-        }
-      });
-    }
+desactivarUsuario(usuario: Usuario): void {
+  const nuevo_activo = !usuario.activo;
+  const nombreCompleto = `${usuario.primer_nombre} ${usuario.primer_apellido}`;
+  if (confirm(`¿Está seguro de ${nuevo_activo ? 'activar' : 'desactivar'} el usuario "${nombreCompleto}"?`)) {
+    this.usuarioService.desactivar_activar_usuario(usuario.id_usuario, nuevo_activo).subscribe({
+      next: () => {
+        this.loadUsuarios();
+      },
+      error: (error) => {
+        console.error('Error al cambiar el estado del usuario:', error);
+        alert('Error al cambiar el estado del usuario');
+      }
+    });
   }
+}
 }

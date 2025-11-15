@@ -64,8 +64,8 @@ export class UsuarioService {
   /**
    * Desactiva un usuario (soft delete)
    */
-  desactivarUsuario(id_usuario: string): Observable<Usuario> {
-    return this.apiService.patch<Usuario>(`${this.endpoint}/${id_usuario}/desactivar`, {});
+  desactivar_activar_usuario(id_usuario: string, nuevo_estado: boolean): Observable<Usuario> {
+    return this.apiService.patch<Usuario>(`${this.endpoint}/${id_usuario}/cambiar-estado`, {activo: nuevo_estado})
   }
 
   /**
@@ -81,4 +81,6 @@ export class UsuarioService {
   verificarEsAdmin(id_usuario: string): Observable<any> {
     return this.apiService.get<any>(`${this.endpoint}/${id_usuario}/es-admin`);
   }
+
+  
 }
