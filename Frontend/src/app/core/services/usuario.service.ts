@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ChangePasswordRequest, CreateUsuarioRequest, UpdateUsuarioRequest, Usuario, UsuarioFilters } from '../../shared/models/usuario.model';
+import { CreateUsuarioRequest, UpdateUsuarioRequest, Usuario, UsuarioFilters, UsuarioListResponse } from '../../shared/models/usuario.model';
 import { PaginationParams } from '../models/api-response.model';
 import { ApiService } from './api.service';
 
@@ -15,8 +15,21 @@ export class UsuarioService {
   /**
    * Obtiene todos los usuarios con paginación
    */
-  getUsuarios(pagination: PaginationParams, filters?: UsuarioFilters): Observable<Usuario[]> {
-    return this.apiService.getPaginated<Usuario>(this.endpoint, pagination, filters);
+  getUsuarios(pagination: PaginationParams, filters?: UsuarioFilters): Observable<UsuarioListResponse> {
+    const params : any = {
+      page: pagination.page,
+      limit: pagination.limit
+    };
+
+    if(filters) {
+      if(filters.correo) params.correo= filters.correo;
+      if(filters.primer_nombre) params.primer_nombre = filters.primer_nombre;
+      if(filters.segundo_nombre) params.segundo_nombre = filters.segundo_nombre;
+      if(filters.primer_apellido) params.primer_apellido = filters.primer_apellido;
+      if(filters.segundo_apellido) params.segundo_apellido = filters.segundo_apellido;
+      if(filters.activo !== undefined) params.activo = filters.activo;
+        }
+    return this.apiService.get<UsuarioListResponse>(this.endpoint, { params } );
   }
 
   
@@ -53,13 +66,6 @@ export class UsuarioService {
    */
   desactivarUsuario(id: string): Observable<Usuario> {
     return this.apiService.patch<Usuario>(`${this.endpoint}/${id}/desactivar`, {});
-  }
-
-  /**
-   * Cambia la contraseña de un usuario
-   */
-  changePassword(id: string, passwordData: ChangePasswordRequest): Observable<any> {
-    return this.apiService.post<any>(`${this.endpoint}/${id}/cambiar-contrasena`, passwordData);
   }
 
   /**
