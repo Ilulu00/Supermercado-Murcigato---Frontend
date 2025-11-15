@@ -25,7 +25,9 @@ export interface CreateUsuarioRequest {
   segundo_apellido?: string;
   correo: string;
   telefono?: string;
-  es_admin?: boolean;
+  es_admin: boolean;
+  activo: boolean;
+  fecha_registro: string;
 }
 
 /**
