@@ -12,7 +12,7 @@
       <div class="filters mb-3">
         <div class="row">
           <div class="col-md-3">
-            <input type="text" class="form-control" placeholder="Buscar por email..." [(ngModel)]="filters.email"
+            <input type="text" class="form-control" placeholder="Buscar por email..." [(ngModel)]="filters.correo"
               (input)="onFilterChange()">
           </div>
           <div class="col-md-2">
@@ -36,7 +36,6 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>Email</th>
               <th>Primer nombre</th>
               <th>Segundo nombre</th>
               <th>Primer apellido</th>
@@ -57,13 +56,12 @@
               <td colspan="9" class="text-center">No hay usuarios disponibles</td>
             </tr>
             <tr *ngFor="let usuario of usuarios">
-              <td>{{ usuario.id }}</td>
-              <td>{{ usuario.email }}</td>
+              <td>{{ usuario.id_usuario }}</td>
               <td>{{ usuario.primer_nombre }}</td>
               <td>{{ usuario.segundo_nombre || '-'}}</td>
               <td>{{ usuario.primer_apellido}}</td>
               <td>{{ usuario.segundo_apellido || '-'}}</td>
-              <td>{{ usuario.email}}</td>
+              <td>{{ usuario.correo }}</td>
               <td>{{ usuario.telefono || '-' }}</td>
 
               <td>
@@ -76,7 +74,7 @@
                   {{ usuario.es_admin ? 'Admin' : 'Usuario' }}
                 </span>
               </td>
-              <td>{{ usuario.fecha_creacion | date:'short' }}</td>
+              <td>{{ usuario.fecha_registro | date:'short' }}</td>
               <td>
                 <button class="btn btn-sm btn-primary me-1" (click)="editUsuario(usuario)">
                   Editar
@@ -151,8 +149,8 @@
             </div>
 
             <div class="form-group mb-3">
-              <label for="email">Email *</label>
-              <input type="email" class="form-control" id="email" formControlName="email"
+              <label for="correo">Correo *</label>
+              <input type="correo" class="form-control" id="correo" formControlName="correo"
                 placeholder="Ingrese el email del usuario">
               <div *ngIf="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched" class="text-danger">
                 Ingrese un email válido, este campo es obligatorio
@@ -163,16 +161,6 @@
               <label for="telefono">Teléfono</label>
               <input type="tel" class="form-control" id="telefono" formControlName="telefono"
                 placeholder="Ingrese su número de teléfono">
-            </div>
-
-            <div class="form-group mb-3" *ngIf="!editingUsuario">
-              <label for="contraseña">Contraseña *</label>
-              <input type="password" class="form-control" id="contraseña" formControlName="contraseña"
-                placeholder="Ingrese la contraseña">
-              <div *ngIf="usuarioForm.get('contraseña')?.invalid && usuarioForm.get('contraseña')?.touched"
-                class="text-danger">
-                La contraseña debe tener al menos 8 carácteres
-              </div>
             </div>
 
             <div class="form-group mb-3">

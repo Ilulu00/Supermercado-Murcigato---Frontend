@@ -1,47 +1,34 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/auth.guard';
+
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: '/auth/login',
-    pathMatch: 'full'
-  },
-  {
     path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [AuthGuard]
+    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+
   },
   {
     path: 'categorias',
-    loadComponent: () => import('./features/categoria/categoria-list/categoria-list.component').then(m => m.CategoriaListComponent),
-    canActivate: [AuthGuard]
+    loadComponent: () => import('./features/categoria/categoria-list/categoria-list.component').then(m => m.CategoriaListComponent)
   },
   {
     path: 'productos',
-    loadComponent: () => import('./features/producto/producto-list/producto-list.component').then(m => m.ProductoListComponent),
-    canActivate: [AuthGuard]
+    loadComponent: () => import('./features/producto/producto-list/producto-list.component').then(m => m.ProductoListComponent)
   },
   {
     path: 'usuarios',
-    loadComponent: () => import('./features/usuario/usuario-list/usuario-list.component').then(m => m.UsuarioListComponent),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then(m => m.authRoutes)
+    loadComponent: () => import('./features/usuario/usuario-list/usuario-list.component').then(m => m.UsuarioListComponent)
   },
   {
     path: 'carrito',
-    loadComponent: () => import('./features/carrito/carrito-list.component').then(m => m.CarritoListComponent),
+    loadComponent: () => import('./features/carrito/carrito-list.component').then(m => m.CarritoListComponent)
   },
   {
     path: 'proveedor',
-    loadComponent: () => import('./features/proveedor/proveedor-list/proveedor-list.component').then(m => m.ProveedorListComponent),
-    canActivate: [AuthGuard]
+    loadComponent: () => import('./features/proveedor/proveedor-list/proveedor-list.component').then(m => m.ProveedorListComponent)
   },
   {
     path: '**',
-    redirectTo: '/auth/login'
+    redirectTo: '/dashboard'
   }
 ];

@@ -141,7 +141,7 @@
                     >
                         <label>Producto:</label>
                         <select class="form-control" formControlName="id_producto" (change)="onSelectProducto(i)">
-                          <option value="" disabled selected>Seleccione un producto: </option>
+                          <option value="" disabled>Seleccione un producto: </option>
                           <option *ngFor="let p of productos" [value]="p.id_producto">
                             {{ p.nombre_producto }}
                           </option>
