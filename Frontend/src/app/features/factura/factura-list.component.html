@@ -3,35 +3,21 @@
     <div class="card-header">
       <h2 class="card-title">Facturas Hechas</h2>
     </div>
-    
+
     <div class="card-body">
       <!-- Filtros -->
       <div class="filters mb-3">
         <div class="row">
           <div class="col-md-3">
-            <input 
-              type="text" 
-              class="form-control" 
-              placeholder="Buscar por usuario..."
-              [(ngModel)]="filters.id_usuario"
-              (input)="onFilterChange()"
-            >
+            <input type="text" class="form-control" placeholder="Buscar por usuario..." [(ngModel)]="filters.id_usuario"
+              (input)="onFilterChange()">
           </div>
           <div class="col-md-3">
-            <input 
-              type="text" 
-              class="form-control" 
-              placeholder="Buscar por metodo de pago..."
-              [(ngModel)]="filters.metodo_pago"
-              (input)="onFilterChange()"
-            >
+            <input type="text" class="form-control" placeholder="Buscar por metodo de pago..."
+              [(ngModel)]="filters.metodo_pago" (input)="onFilterChange()">
           </div>
           <div class="col-md-2">
-            <select 
-              class="form-control" 
-              [(ngModel)]="filters.activo"
-              (change)="onFilterChange()"
-            >
+            <select class="form-control" [(ngModel)]="filters.activo" (change)="onFilterChange()">
               <option value="">Todos los estados</option>
               <option value="true">Activos</option>
               <option value="false">Inactivos</option>
@@ -73,7 +59,7 @@
               <td>{{ factura.id_usuario }}</td>
               <td>{{ factura.id_carrito }}</td>
               <td>{{ factura.metodo_pago }}</td>
-              <td>{{ factura.subtotal | currency }}</td>
+              <td>{{ factura.subtotal_total | currency }}</td>
               <td>{{ factura.descuento || 0 | currency}}</td>
               <td>{{ factura.total | currency }}</td>
               <td>{{ factura.fecha_creacion | date: 'short' }}</td>
@@ -90,11 +76,11 @@
               </td>
             </tr>
             <!--Para mostrar los detalles-->
-            <tr *ngIf="factura.detalles $$ factura.detalles-length > 0">
+            <tr *ngIf="factura.detalles && factura.detalles.length > 0">
               <td colspan="10">
                 <table class="table table-sm table bordered mb-0">
                   <thead>
-                    <><tr>
+                    <tr>
                       <th>Producto</th>
                       <th>Cantidad</th>
                       <th>precio del producto</th>
@@ -110,27 +96,21 @@
                     </tr>
                   </tbody>
                 </table>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
 
       <!-- Paginación -->
       <div class="pagination mt-3" *ngIf="totalPages > 1">
-        <button 
-          class="btn btn-secondary" 
-          [disabled]="currentPage === 1"
-          (click)="goToPage(currentPage - 1)"
-        >
+        <button class="btn btn-secondary" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
           Anterior
         </button>
         <span class="mx-3">
           Página {{ currentPage }} de {{ totalPages }}
         </span>
-        <button 
-          class="btn btn-secondary" 
-          [disabled]="currentPage === totalPages"
-          (click)="goToPage(currentPage + 1)"
-        >
+        <button class="btn btn-secondary" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
           Siguiente
         </button>
       </div>
@@ -138,7 +118,8 @@
   </div>
 
   <!-- Modal para desactivar una factura -->
-  <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1" role="dialog">
+  <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1"
+    role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -151,9 +132,10 @@
           <form [formGroup]="facturaForm" (ngSubmit)="saveFactura()">
             <div class="form-group mb-3">
               <label for="Activo"> activo *</label>
-              <input type="boolean" class="form-control"
-              formControlName="activo" (input)="desactivarYactivarFactura(i)"/>
-            </div>  
+              <input type="boolean" class="form-control" formControlName="activo"
+                (input)="desactivarYactivarFactura(i)" />
+            </div>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
