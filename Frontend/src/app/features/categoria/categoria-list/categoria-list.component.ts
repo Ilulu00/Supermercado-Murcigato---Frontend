@@ -25,8 +25,10 @@ export class CategoriaListComponent implements OnInit {
   showModal = false;
   editingCategoria: Categoria | null = null;
   categoriaForm = {
-    nombre: '',
-    descripcion: ''
+    nombre_categoria: '',
+    descripcion: '',
+    fecha_creacion:  new Date().toISOString(),
+    fecha_edicion: new Date().toISOString() ?? ' - '
   };
 
   constructor(private categoriaService: CategoriaService) { }
@@ -43,10 +45,10 @@ export class CategoriaListComponent implements OnInit {
     };
 
     this.categoriaService.getCategorias(pagination, this.filters).subscribe({
-      next: (categorias) => {
-        this.categorias = categorias;
-        // Since backend doesn't provide pagination info, we'll set a default
-        this.totalPages = Math.ceil(categorias.length / this.pageSize);
+      next: (resp) => {
+        this.categorias = resp.data;
+        this.totalPages = resp.totalPages;
+        this.currentPage = resp.currentPage;
         this.loading = false;
       },
       error: (error) => {
@@ -56,8 +58,7 @@ export class CategoriaListComponent implements OnInit {
           console.log('Backend no disponible, usando datos mock para categorías');
           this.categorias = [{
             id_categoria: '1',
-            id: '1',
-            nombre: 'Mascotas',
+            nombre_categoria: 'Mascotas',
             descripcion: 'Productos hechos para las mascotas del hogar, sanos para ellos.',
             fecha_creacion: new Date().toISOString(),
             fecha_edicion: new Date().toISOString()
@@ -90,8 +91,10 @@ export class CategoriaListComponent implements OnInit {
   openCreateModal(): void {
     this.editingCategoria = null;
     this.categoriaForm = {
-      nombre: '',
+      nombre_categoria: '',
       descripcion: '',
+      fecha_creacion:  new Date().toISOString(),
+      fecha_edicion: new Date().toISOString() ?? ' - '
     };
     this.showModal = true;
   }
@@ -99,8 +102,10 @@ export class CategoriaListComponent implements OnInit {
   editCategoria(categoria: Categoria): void {
     this.editingCategoria = categoria;
     this.categoriaForm = {
-      nombre: categoria.nombre,
-      descripcion: categoria.descripcion || ''
+      nombre_categoria: categoria.nombre_categoria,
+      descripcion: categoria.descripcion || ' - ',
+      fecha_creacion: categoria.fecha_creacion,
+      fecha_edicion: categoria.fecha_edicion || ' - '
     };
     this.showModal = true;
   }
@@ -109,13 +114,15 @@ export class CategoriaListComponent implements OnInit {
     this.showModal = false;
     this.editingCategoria = null;
     this.categoriaForm = {
-      nombre: '',
-      descripcion: ''
+      nombre_categoria: '',
+      descripcion: '',
+      fecha_creacion: new Date().toISOString(),
+      fecha_edicion: new Date().toISOString(),
     };
   }
 
   saveCategoria(): void {
-    if (!this.categoriaForm.nombre.trim()) {
+    if (!this.categoriaForm.nombre_categoria.trim()) {
       alert('El nombre es requerido');
       return;
     }
@@ -123,11 +130,12 @@ export class CategoriaListComponent implements OnInit {
     if (this.editingCategoria) {
       // Actualizar categoría existente
       const updateData = {
-        nombre: this.categoriaForm.nombre,
-        descripcion: this.categoriaForm.descripcion
+        nombre: this.categoriaForm.nombre_categoria,
+        descripcion: this.categoriaForm.descripcion,
+        fecha_edicion: this.categoriaForm.fecha_edicion
       };
 
-      this.categoriaService.updateCategoria(this.editingCategoria.id, updateData).subscribe({
+      this.categoriaService.updateCategoria(this.editingCategoria.id_categoria, updateData).subscribe({
         next: () => {
           this.loadCategorias();
           this.closeModal();
@@ -140,8 +148,9 @@ export class CategoriaListComponent implements OnInit {
     } else {
       // Crear nueva categoría
       const newCategoria = {
-        nombre: this.categoriaForm.nombre,
-        descripcion: this.categoriaForm.descripcion
+        nombre_categoria: this.categoriaForm.nombre_categoria,
+        descripcion: this.categoriaForm.descripcion,
+        fecha_creacion: new Date().toISOString(),
       };
 
       this.categoriaService.createCategoria(newCategoria).subscribe({

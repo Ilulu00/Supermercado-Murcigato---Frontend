@@ -3,7 +3,6 @@
  */
 export interface Proveedor {
     id_proveedor: string; // UUID
-    id: string; // Alias for id_proveedor for frontend compatibility
     primer_nombre: string;
     segundo_nombre?: string;
     primer_apellido: string;
@@ -57,4 +56,5 @@ export interface ProveedorListResponse {
     totalPages: number;
     currentPage: number;
     totalItems: number;
+    size: number;
 }
