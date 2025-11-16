@@ -3,7 +3,6 @@
  */
 export interface Producto {
   id_producto: string; // UUID
-  id: string; // Alias for id_producto for frontend compatibility
   nombre_producto: string;
   precio_producto: number;
   stock: number;
@@ -25,6 +24,7 @@ export interface CreateProductoRequest {
   stock: number;
   id_categoria: string;
   id_proveedor: string;
+  fecha_creacion: string;
 }
 
 /**
@@ -36,6 +36,7 @@ export interface UpdateProductoRequest {
   stock?: number;
   id_categoria?: string;
   id_proveedor?: string;
+  fecha_actualizacion: string;
 }
 
 /**

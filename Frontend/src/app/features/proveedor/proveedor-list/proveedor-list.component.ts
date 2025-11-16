@@ -31,6 +31,7 @@ export class ProveedorListComponent implements OnInit {
         segundo_apellido: '',
         telefono: '',
         correo: '',
+        fecha_creacion: new Date().toISOString()
     };
 
     constructor(private ProveedorService: ProveedorService) { }
@@ -46,11 +47,11 @@ export class ProveedorListComponent implements OnInit {
             limit: this.pageSize
         };
 
-        this.ProveedorService.getProveedor(pagination, this.filters).subscribe({
-            next: (proveedor) => {
-                this.proveedores = proveedor;
-                // Since backend doesn't provide pagination info, we'll set a default
-                this.totalPages = Math.ceil(proveedor.length / this.pageSize);
+        this.ProveedorService.getProveedores(pagination, this.filters).subscribe({
+            next: (resp) => {
+                this.proveedores = resp.data,
+                this.totalPages = resp.totalPages;
+                this.currentPage = resp.currentPage;
                 this.loading = false;
             },
             error: (error) => {
@@ -60,7 +61,6 @@ export class ProveedorListComponent implements OnInit {
                     console.log('Backend no disponible, usando datos mock para proveedores');
                     this.proveedores = [{
                         id_proveedor: '1',
-                        id: '1',
                         primer_nombre: 'flor',
                         segundo_nombre: 'Angel',
                         primer_apellido: 'Estrada',
@@ -104,6 +104,7 @@ export class ProveedorListComponent implements OnInit {
             segundo_apellido: '',
             telefono: '',
             correo: '',
+            fecha_creacion: new Date().toISOString()
         };
         this.showModal = true;
     }
@@ -116,7 +117,8 @@ export class ProveedorListComponent implements OnInit {
             primer_apellido: proveedor.primer_apellido,
             segundo_apellido: proveedor.segundo_apellido || '',
             telefono: proveedor.telefono || '',
-            correo: proveedor.correo || ''
+            correo: proveedor.correo || '',
+            fecha_creacion: proveedor.fecha_creacion
         };
         this.showModal = true;
     }
@@ -131,6 +133,7 @@ export class ProveedorListComponent implements OnInit {
             segundo_apellido: '',
             telefono: '',
             correo: '',
+            fecha_creacion: new Date().toISOString()
         };
     }
 
@@ -159,7 +162,7 @@ export class ProveedorListComponent implements OnInit {
                 correo: this.proveedorForm.correo
             };
 
-            this.ProveedorService.updateProveedor(this.editingProveedor.id, updateData).subscribe({
+            this.ProveedorService.updateProveedor(this.editingProveedor.id_proveedor, updateData).subscribe({
                 next: () => {
                     this.loadProveedor();
                     this.closeModal();
@@ -177,7 +180,8 @@ export class ProveedorListComponent implements OnInit {
                 primer_apellido: this.proveedorForm.primer_apellido,
                 segundo_apellido: this.proveedorForm.segundo_apellido,
                 telefono: this.proveedorForm.telefono,
-                correo: this.proveedorForm.correo
+                correo: this.proveedorForm.correo,
+                fecha_creacion: this.proveedorForm.fecha_creacion
             };
 
             this.ProveedorService.createProveedor(newProveedor).subscribe({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Categoria, CategoriaFilters, CreateCategoriaRequest, UpdateCategoriaRequest } from '../../shared/models/categoria.model';
+import { Categoria, CategoriaFilters, CategoriaListResponse, CreateCategoriaRequest, UpdateCategoriaRequest } from '../../shared/models/categoria.model';
 import { PaginationParams } from '../models/api-response.model';
 import { ApiService } from './api.service';
 
@@ -15,15 +15,23 @@ export class CategoriaService {
   /**
    * Obtiene todas las categorías con paginación
    */
-  getCategorias(pagination: PaginationParams, filters?: CategoriaFilters): Observable<Categoria[]> {
-    return this.apiService.getPaginated<Categoria>(this.endpoint, pagination, filters);
+  getCategorias(pagination: PaginationParams, filters?: CategoriaFilters): Observable<CategoriaListResponse> {
+    const params : any = {
+      page: pagination.page,
+      limit: pagination.limit
+    };
+
+    if(filters) {
+      if(filters.nombre_categoria) params.nombre_categoria= filters.nombre_categoria;
+        }
+    return this.apiService.get<CategoriaListResponse>(this.endpoint, { params } );
   }
 
   /**
    * Obtiene una categoría por ID
    */
-  getCategoriaById(id: string): Observable<Categoria> {
-    return this.apiService.get<Categoria>(`${this.endpoint}/${id}`);
+  getCategoriaById(id_categoria: string): Observable<Categoria> {
+    return this.apiService.get<Categoria>(`${this.endpoint}/${id_categoria}`);
   }
 
   /**
@@ -36,14 +44,14 @@ export class CategoriaService {
   /**
    * Actualiza una categoría existente
    */
-  updateCategoria(id: string, categoria: UpdateCategoriaRequest): Observable<Categoria> {
-    return this.apiService.put<Categoria>(`${this.endpoint}/${id}`, categoria);
+  updateCategoria(id_categoria: string, categoria: UpdateCategoriaRequest): Observable<Categoria> {
+    return this.apiService.put<Categoria>(`${this.endpoint}/${id_categoria}`, categoria);
   }
 
   /**
    * Obtiene una categoría por nombre
    */
-  getCategoriaByNombre(nombre: string): Observable<Categoria> {
-    return this.apiService.get<Categoria>(`${this.endpoint}/nombre/${nombre}`);
+  getCategoriaByNombre(nombre_categoria: string): Observable<Categoria> {
+    return this.apiService.get<Categoria>(`${this.endpoint}/nombre/${nombre_categoria}`);
   }
 }

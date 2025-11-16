@@ -38,7 +38,9 @@ export class UsuarioListComponent implements OnInit {
       segundo_apellido: [''],
       correo: [''],
       telefono: [''],
-      es_admin: [false]
+      activo: [true],
+      es_admin: [false],
+      fecha_registro: [new Date().toISOString()]
     });
   }
 
@@ -73,7 +75,7 @@ export class UsuarioListComponent implements OnInit {
             segundo_apellido: '',
             correo: 'admin@mock.com',
             telefono: '',
-            activo: true,
+            activo: true, 
             es_admin: true,
             fecha_registro: new Date().toISOString(),
             fecha_edicion: new Date().toISOString()
@@ -112,7 +114,9 @@ export class UsuarioListComponent implements OnInit {
       segundo_apellido: '',
       correo: '',
       telefono: '',
-      es_admin: false
+      es_admin: false,
+      activo: true,
+      fecha_registro: new Date().toISOString(),
     });
     this.showModal = true;
   }
@@ -126,6 +130,7 @@ export class UsuarioListComponent implements OnInit {
       segundo_apellido: usuario.segundo_apellido,
       correo: usuario.correo,
       telefono: usuario.telefono || '',
+      activo: usuario.activo,
       es_admin: usuario.es_admin
     });
     this.showModal = true;
@@ -176,7 +181,9 @@ export class UsuarioListComponent implements OnInit {
         segundo_apellido: formValue.segundo_apellido,
         correo: formValue.correo,
         telefono: formValue.telefono,
-        es_admin: formValue.es_admin
+        es_admin: formValue.es_admin,
+        activo: formValue.activo,
+        fecha_registro: formValue.fecha_registro
       };
 
       this.usuarioService.createUsuario(newUsuario).subscribe({
@@ -192,17 +199,19 @@ export class UsuarioListComponent implements OnInit {
     }
   }
 
-  desactivarUsuario(usuario: Usuario): void {
-    if (confirm(`¿Está seguro de desactivar el usuario "${usuario.correo}"?`)) {
-      this.usuarioService.desactivarUsuario(usuario.id_usuario).subscribe({
-        next: () => {
-          this.loadUsuarios();
-        },
-        error: (error) => {
-          console.error('Error al desactivar usuario:', error);
-          alert('Error al desactivar el usuario');
-        }
-      });
-    }
+desactivarUsuario(usuario: Usuario): void {
+  const nuevo_activo = !usuario.activo;
+  const nombreCompleto = `${usuario.primer_nombre} ${usuario.primer_apellido}`;
+  if (confirm(`¿Está seguro de ${nuevo_activo ? 'activar' : 'desactivar'} el usuario "${nombreCompleto}"?`)) {
+    this.usuarioService.desactivar_activar_usuario(usuario.id_usuario, nuevo_activo).subscribe({
+      next: () => {
+        this.loadUsuarios();
+      },
+      error: (error) => {
+        console.error('Error al cambiar el estado del usuario:', error);
+        alert('Error al cambiar el estado del usuario');
+      }
+    });
   }
+}
 }

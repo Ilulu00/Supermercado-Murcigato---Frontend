@@ -1,7 +1,7 @@
 <div class="factura-list">
   <div class="card">
     <div class="card-header">
-      <h2 class="card-title">Facturas Hechas</h2>
+      <h2 class="card-title">Facturas Hechas 📄</h2>
     </div>
 
     <div class="card-body">
@@ -9,13 +9,15 @@
       <div class="filters mb-3">
         <div class="row">
           <div class="col-md-3">
-            <input type="text" class="form-control" placeholder="Buscar por usuario..." [(ngModel)]="filters.id_usuario"
-              (input)="onFilterChange()">
+            <input type="text" class="form-control" placeholder="Buscar por usuario..."
+              [(ngModel)]="filters.id_usuario" (input)="onFilterChange()">
           </div>
+
           <div class="col-md-3">
             <input type="text" class="form-control" placeholder="Buscar por metodo de pago..."
               [(ngModel)]="filters.metodo_pago" (input)="onFilterChange()">
           </div>
+
           <div class="col-md-2">
             <select class="form-control" [(ngModel)]="filters.activo" (change)="onFilterChange()">
               <option value="">Todos los estados</option>
@@ -23,6 +25,7 @@
               <option value="false">Inactivos</option>
             </select>
           </div>
+
           <div class="col-md-2">
             <button class="btn btn-secondary" (click)="clearFilters()">
               Limpiar
@@ -31,117 +34,107 @@
         </div>
       </div>
 
-      <!-- Tabla de las facturas -->
-      <div class="table-responsive">
-        <table class="table">
+      <!-- Tabla -->
+      <div class="card p-3 mb-3">
+        <h3>|Lista de Facturas|</h3>
+
+        <table class="table table-bordered table-striped mt-3">
           <thead>
             <tr>
-              <th>ID de la factura</th>
+              <th>ID</th>
               <th>Usuario</th>
-              <th>N. carrito</th>
-              <th>Metodo de pago</th>
-              <th>Subtotal</th>
-              <th>Descuento aplicado</th>
-              <th>Total con descuento</th>
-              <th>Fecha de creación</th>
-              <th>Acciones</th>
+              <th>N° carrito</th>
+              <th>Método de pago</th>
+              <th>Total</th>
+              <th>Fecha</th>
+              <th>Activo</th>
+              <th>Detalles</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr *ngIf="loading">
-              <td colspan="9" class="text-center">Cargando...</td>
-            </tr>
-            <tr *ngIf="!loading && facturas.length === 0">
-              <td colspan="9" class="text-center">No hay facturas</td>
-            </tr>
-            <tr *ngFor="let factura of facturas">
-              <td>{{ factura.id_factura }}</td>
-              <td>{{ factura.id_usuario }}</td>
-              <td>{{ factura.id_carrito }}</td>
-              <td>{{ factura.metodo_pago }}</td>
-              <td>{{ factura.subtotal_total | currency }}</td>
-              <td>{{ factura.descuento || 0 | currency}}</td>
-              <td>{{ factura.total | currency }}</td>
-              <td>{{ factura.fecha_creacion | date: 'short' }}</td>
+            <tr *ngFor="let f of facturas">
+              <td>{{ f.id_factura }}</td>
+              <td>{{ f.id_usuario }}</td>
+              <td>{{ f.id_carrito }}</td>
+              <td>{{ f.metodo_pago }}</td>
+              <td>{{ f.total | currency:'USD' }}</td>
+              <td>{{ f.fecha_creacion | date:'dd/MM/yyyy HH:mm' }}</td>
+
               <td>
-                <span class="badge" [class.badge-success]="factura.activo" [class.badge-danger]="!factura.activo">
-                  {{ factura.activo ? 'Activo' : 'Inactivo' }}
+                <span class="badge" [ngClass]="f.activo ? 'bg-success' : 'bg-danger'">
+                  {{ f.activo ? 'Activo' : 'Inactivo' }}
                 </span>
               </td>
-              <td>{{ factura.fecha_creacion | date:'short' }}</td>
+
               <td>
-                <button class="btn btn-sm btn-warning me-1" (click)="desactivarFactura(factura)" *ngIf="factura.activo">
-                  Desactivar
+                <button class="btn btn-primary btn-sm" (click)="cargarFacturaEnModal(f)">
+                  Ver Detalles
                 </button>
-              </td>
-            </tr>
-            <!--Para mostrar los detalles-->
-            <tr *ngIf="factura.detalles && factura.detalles.length > 0">
-              <td colspan="10">
-                <table class="table table-sm table bordered mb-0">
-                  <thead>
-                    <tr>
-                      <th>Producto</th>
-                      <th>Cantidad</th>
-                      <th>precio del producto</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let detalle of factura.detalles">
-                      <td>{{ detalle.nombre_producto }}</td>
-                      <td>{{ detalle.cantidad}}</td>
-                      <td>{{ detalle.precio_producto | currency }}</td>
-                      <td>{{ detalle.total | currency }}</td>
-                    </tr>
-                  </tbody>
-                </table>
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
 
-      <!-- Paginación -->
-      <div class="pagination mt-3" *ngIf="totalPages > 1">
-        <button class="btn btn-secondary" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
-          Anterior
-        </button>
-        <span class="mx-3">
-          Página {{ currentPage }} de {{ totalPages }}
-        </span>
-        <button class="btn btn-secondary" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
-          Siguiente
-        </button>
+        <!-- Paginación -->
+        <div class="d-flex justify-content-between mt-3">
+          <button class="btn btn-outline-primary"
+            [disabled]="currentPage === 1"
+            (click)="goToPage(currentPage - 1)">
+            Anterior
+          </button>
+
+          <span>Página {{ currentPage }} de {{ totalPages }}</span>
+
+          <button class="btn btn-outline-primary"
+            [disabled]="currentPage === totalPages"
+            (click)="goToPage(currentPage + 1)">
+            Siguiente
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal para desactivar una factura -->
-  <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1"
-    role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{ editingFactura ? 'Activar factura' : 'Desactivar factura' }}</h5>
-          <button type="button" class="close" (click)="closeModal()">
-            <span>&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="facturaForm" (ngSubmit)="saveFactura()">
-            <div class="form-group mb-3">
-              <label for="Activo"> activo *</label>
-              <input type="boolean" class="form-control" formControlName="activo"
-                (input)="desactivarYactivarFactura(i)" />
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="showModal">
+    <div class="modal-content p-4">
+      <h3>Factura {{ editingFactura?.id_factura }}</h3>
 
-        </div>
+      <hr>
+
+      <div class="mb-3">
+        <p><strong>Usuario:</strong> {{ facturaForm.value.id_usuario }}</p>
+        <p><strong>Carrito:</strong> {{ facturaForm.value.id_carrito }}</p>
+        <p><strong>Método Pago:</strong> {{ facturaForm.value.metodo_pago }}</p>
+        <p><strong>Subtotal:</strong> {{ facturaForm.value.subtotal_total }}</p>
+        <p><strong>Descuento:</strong> {{ facturaForm.value.descuento }}</p>
+        <p><strong>Total:</strong> {{ facturaForm.value.total }}</p>
       </div>
+
+      <h4>Detalles</h4>
+
+      <table class="table table-sm table-bordered">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cant.</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let d of facturaForm.value.detalles">
+            <td>{{ getNombreProducto(d.id_producto) }}</td>
+            <td>{{ d.cantidad }}</td>
+            <td>{{ d.precio_producto }}</td>
+            <td>{{ d.subtotal }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button class="btn btn-danger mt-3" (click)="closeModal()">Cerrar</button>
     </div>
   </div>
 </div>

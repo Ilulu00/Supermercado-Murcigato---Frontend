@@ -1,7 +1,7 @@
 <div class="producto-list">
   <div class="card">
     <div class="card-header">
-      <h2 class="card-title">Gestión de Productos</h2>
+      <h2 class="card-title">Gestión de Productos 🍪</h2>
       <button class="btn btn-success" (click)="openCreateModal()">
         Nuevo Producto
       </button>
@@ -32,14 +32,16 @@
       </div>
 
       <!-- Tabla de productos -->
-      <div class="table-responsive">
-        <table class="table">
+      <div class="card p-3 mb-3">
+        <h3>|Lista de productos|</h3>
+        <table class="table table-bordered table-striped mt-3">
           <thead>
             <tr>
               <th>ID</th>
               <th>Nombre</th>
               <th>Precio</th>
               <th>Categoría</th>
+              <th>Proveedor</th>
               <th>Stock</th>
               <th>Fecha Creación</th>
               <th>Acciones</th>
@@ -57,6 +59,7 @@
               <td>{{ producto.nombre_producto }}</td>
               <td>{{ formatearPrecio(producto.precio_producto) }}</td>
               <td>{{ producto.id_categoria || '-' }}</td>
+              <td>{{ producto.id_proveedor || '-' }}</td>
               <td>
                 <span class="badge" [class.badge-success]="producto.stock > 20"
                   [class.badge-warning]="producto.stock > 10 && producto.stock <= 20"
@@ -119,7 +122,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row"> 
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="stock">Stock *</label>
@@ -130,15 +133,26 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="id_categoria">Categoría *</label>
-                  <select class="form-control" id="id_categoria" [(ngModel)]="productoForm.id_categoria"
-                    name="id_categoria" required>
-                    <option value="">Seleccione una categoría</option> #aqui
-                    <option value="1">Productos de limpieza</option>
-                    <option value="2">Mascota</option>
-                    <option value="3">Parva</option>
+                  <select class="form-control" id="id_categoria" [(ngModel)]="productoForm.id_categoria" name="id_categoria" required>
+                    <option value="">Seleccione una categoría</option>
+                    <option *ngFor="let cat of categorias" [value]="cat.id_categoria">
+                      {{ cat.nombre_categoria }}
+                    </option>
                   </select>
                 </div>
-              </div>
+                  </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="id_proveedor">Proveedor *</label>
+                        <select class="form-control" id="id_proveedor" [(ngModel)]="productoForm.id_proveedor"
+                          name="id_proveedor"required>
+                          <option value="">Seleccione un proveedor</option>
+                          <option *ngFor="let prov of proveedores" [value]="prov.id_proveedor">
+                            {{ prov.primer_nombre }} {{ prov.primer_apellido }}
+                          </option>
+                        </select>
+                      </div>
+                  </div>
             </div>
           </form>
         </div>
