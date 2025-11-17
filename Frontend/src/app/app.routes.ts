@@ -24,8 +24,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/carrito/carrito-list.component').then(m => m.CarritoListComponent)
   },
   {
+    path: 'facturas',
+    loadComponent: () => import('./features/factura/factura-list.component').then(m => m.FacturaListComponent),
+  },
+  {
     path: 'proveedor',
-    loadComponent: () => import('./features/proveedor/proveedor-list/proveedor-list.component').then(m => m.ProveedorListComponent)
+    loadComponent: () => import('./features/proveedor/proveedor-list/proveedor-list.component').then(m => m.ProveedorListComponent),
   },
   {
     path: '**',

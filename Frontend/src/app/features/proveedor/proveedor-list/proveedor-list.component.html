@@ -1,7 +1,7 @@
 <div class="proveedor-list">
   <div class="card">
     <div class="card-header">
-      <h2 class="card-title">Gestión de Proveedores</h2>
+      <h2 class="card-title">Gestión de Proveedores 👩‍💼</h2>
       <button class="btn btn-success" (click)="openCreateModal()">
         Nuevo Proveedor
       </button>
@@ -24,8 +24,10 @@
       </div>
 
       <!-- Tabla de proveedores -->
-      <div class="table-responsive">
-        <table class="table">
+      <div class="card p-3 mb-3">
+          <h3>|Lista de proveedores 🧩|</h3>
+
+        <table class="table table-borderec table-striped mt-3">
           <thead>
             <tr>
               <th>ID</th>
@@ -47,14 +49,14 @@
               <td colspan="6" class="text-center">No hay proveedores disponibles</td>
             </tr>
             <tr *ngFor="let proveedor of proveedores">
-              <td>{{ proveedor.id }}</td>
+              <td>{{ proveedor.id_proveedor }}</td>
               <td>{{ proveedor.primer_nombre }}</td>
               <td>{{ proveedor.segundo_nombre || '-' }}</td>
               <td>{{ proveedor.primer_apellido }}</td>
               <td>{{ proveedor.segundo_apellido || '-' }}</td>
               <td>{{ proveedor.telefono || '-' }}</td>
               <td>{{ proveedor.correo }}</td>
-              <td>{{ proveedor.fecha_creacion | date:'short' }}</td>
+              <td>{{ proveedor.fecha_creacion | date:'dd/MM/yyyy HH:mm' }}</td>
               <td>
                 <button class="btn btn-sm btn-primary" (click)="editProveedor(proveedor)">
                   Editar
@@ -67,14 +69,18 @@
 
       <!-- Paginación -->
       <div class="pagination mt-3" *ngIf="totalPages > 1">
-        <button class="btn btn-secondary" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
-          Anterior
-        </button>
-        <span class="mx-3">
-          Página {{ currentPage }} de {{ totalPages }}
-        </span>
-        <button class="btn btn-secondary" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
-          Siguiente
+        <button class="btn btn-outline-primary"
+            [disabled]="currentPage === 1"
+            (click)="goToPage(currentPage - 1)">
+            Anterior
+          </button>
+
+          <span>Página {{ currentPage }} de {{ totalPages }}</span>
+
+          <button class="btn btn-outline-primary"
+            [disabled]="currentPage === totalPages"
+            (click)="goToPage(currentPage + 1)">
+            Siguiente
         </button>
       </div>
     </div>

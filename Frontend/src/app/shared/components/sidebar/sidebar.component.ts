@@ -18,6 +18,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/productos', title: 'Productos',  icon:'shopping_box', class: '' },
     { path: '/carrito', title: 'Carrito de compras', icon: 'shopping_box', class: ''},
     { path: '/facturas', title: 'Facturas', icon: 'design_app', class: ''},
+    { path: '/proveedor', title: 'Proveedores', icon: 'users_single-02', class: ''},
     { path: '/notifications', title: 'Notificaciones',  icon:'ui-1_bell-53', class: '' },
     { path: '/upgrade', title: 'Configuración',  icon:'objects_spaceship', class: 'active active-pro'}
 ];

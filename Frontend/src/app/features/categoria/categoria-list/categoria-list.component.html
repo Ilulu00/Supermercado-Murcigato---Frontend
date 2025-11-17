@@ -1,7 +1,7 @@
 <div class="categoria-list">
   <div class="card">
     <div class="card-header">
-      <h2 class="card-title">Gestión de Categorías</h2>
+      <h2 class="card-title">Gestión de Categorías 🦖</h2>
       <button class="btn btn-success" (click)="openCreateModal()">
         Nueva Categoría
       </button>
@@ -12,7 +12,7 @@
       <div class="filters mb-3">
         <div class="row">
           <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="filters.nombre"
+            <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="filters.nombre_categoria"
               (input)="onFilterChange()">
           </div>
           <div class="col-md-2">
@@ -24,8 +24,9 @@
       </div>
 
       <!-- Tabla de categorías -->
-      <div class="table-responsive">
-        <table class="table">
+      <div class="card p-3 mb-3">
+        <h3>|Lista de categorias|</h3>
+        <table class="table table-bordered table-striped mt-3">
           <thead>
             <tr>
               <th>ID</th>
@@ -43,8 +44,8 @@
               <td colspan="6" class="text-center">No hay categorías disponibles</td>
             </tr>
             <tr *ngFor="let categoria of categorias">
-              <td>{{ categoria.id }}</td>
-              <td>{{ categoria.nombre }}</td>
+              <td>{{ categoria.id_categoria }}</td>
+              <td>{{ categoria.nombre_categoria }}</td>
               <td>{{ categoria.descripcion || '-' }}</td>
               <td>{{ categoria.fecha_creacion | date:'short' }}</td>
               <td>
@@ -86,8 +87,8 @@
         <div class="modal-body">
           <form (ngSubmit)="saveCategoria()">
             <div class="form-group">
-              <label for="nombre">Nombre *</label>
-              <input type="text" class="form-control" id="nombre" [(ngModel)]="categoriaForm.nombre" name="nombre"
+              <label for="nombre_categoria">Nombre *</label>
+              <input type="text" class="form-control" id="nombre_Cateogira_categoria" [(ngModel)]="categoriaForm.nombre_categoria" name="nombre_categoria"
                 required placeholder="Ingrese el nombre de la categoría">
             </div>
             <div class="form-group">
