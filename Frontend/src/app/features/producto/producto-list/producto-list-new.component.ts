@@ -171,7 +171,7 @@ export class ProductoListComponent implements OnInit {
     this.productoService.getProductos(pagination, this.filters).subscribe({
       next: (resp) => {
         this.productos = resp.data,
-        this.totalPages = resp.totalPages;
+          this.totalPages = resp.totalPages;
         this.currentPage = resp.currentPage;
         this.loading = false;
       },

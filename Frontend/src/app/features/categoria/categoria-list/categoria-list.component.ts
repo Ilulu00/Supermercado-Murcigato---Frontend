@@ -27,8 +27,8 @@ export class CategoriaListComponent implements OnInit {
   categoriaForm = {
     nombre_categoria: '',
     descripcion: '',
-    fecha_creacion:  new Date().toISOString(),
-    fecha_edicion: new Date().toISOString() ?? ' - '
+    fecha_creacion: new Date().toISOString(),
+    fecha_actualizacion: new Date().toISOString() ?? ' - '
   };
 
   constructor(private categoriaService: CategoriaService) { }
@@ -61,7 +61,7 @@ export class CategoriaListComponent implements OnInit {
             nombre_categoria: 'Mascotas',
             descripcion: 'Productos hechos para las mascotas del hogar, sanos para ellos.',
             fecha_creacion: new Date().toISOString(),
-            fecha_edicion: new Date().toISOString()
+            fecha_actualizacion: new Date().toISOString()
           }];
           this.totalPages = 1;
         }
@@ -93,8 +93,8 @@ export class CategoriaListComponent implements OnInit {
     this.categoriaForm = {
       nombre_categoria: '',
       descripcion: '',
-      fecha_creacion:  new Date().toISOString(),
-      fecha_edicion: new Date().toISOString() ?? ' - '
+      fecha_creacion: new Date().toISOString(),
+      fecha_actualizacion: new Date().toISOString() ?? ' - '
     };
     this.showModal = true;
   }
@@ -105,7 +105,7 @@ export class CategoriaListComponent implements OnInit {
       nombre_categoria: categoria.nombre_categoria,
       descripcion: categoria.descripcion || ' - ',
       fecha_creacion: categoria.fecha_creacion,
-      fecha_edicion: categoria.fecha_edicion || ' - '
+      fecha_actualizacion: categoria.fecha_actualizacion || ' - '
     };
     this.showModal = true;
   }
@@ -117,7 +117,7 @@ export class CategoriaListComponent implements OnInit {
       nombre_categoria: '',
       descripcion: '',
       fecha_creacion: new Date().toISOString(),
-      fecha_edicion: new Date().toISOString(),
+      fecha_actualizacion: new Date().toISOString(),
     };
   }
 
@@ -132,7 +132,7 @@ export class CategoriaListComponent implements OnInit {
       const updateData = {
         nombre: this.categoriaForm.nombre_categoria,
         descripcion: this.categoriaForm.descripcion,
-        fecha_edicion: this.categoriaForm.fecha_edicion
+        fecha_actualizacion: this.categoriaForm.fecha_actualizacion
       };
 
       this.categoriaService.updateCategoria(this.editingCategoria.id_categoria, updateData).subscribe({
