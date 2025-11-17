@@ -182,11 +182,10 @@ export class ProductoListComponent implements OnInit {
     if (this.editingProducto) {
       // Actualizar producto existente
       const updateData = {
-        nombre: this.productoForm.nombre_producto,
-        precio: this.productoForm.precio_producto,
+        nombre_producto: this.productoForm.nombre_producto,
+        precio_producto: this.productoForm.precio_producto,
         stock: this.productoForm.stock,
         id_categoria: this.productoForm.id_categoria,
-        id_proveedor: this.productoForm.id_proveedor,
         fecha_creacion: this.productoForm.fecha_creacion,
         fecha_actualizacion: this.productoForm.fecha_actualizacion
       };
