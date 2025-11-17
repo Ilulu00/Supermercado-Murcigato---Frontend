@@ -5,9 +5,10 @@ import { PaginationParams } from '../../core/models/api-response.model';
 import { CarritoService } from '../../core/services/carrito.service';
 import { FacturaService } from '../../core/services/factura.service';
 import { ProductoService } from '../../core/services/producto.service';
+import { UsuarioService } from '../../core/services/usuario.service';
 import { CarritoConDetalles, CarritoFilters, CreateCarritoRequest } from '../../shared/models/carrito.model';
 import { Producto } from '../../shared/models/producto.model';
-
+import { Usuario } from '../../shared/models/usuario.model';
 @Component({
     selector: 'app-carrito-list',
     standalone: true,
@@ -23,12 +24,14 @@ export class CarritoListComponent implements OnInit {
     pageSize = 10;
     productos: Producto[] = [];
     filters: CarritoFilters = {};
+    usuarios: Usuario[] = [];
 
     showModal = false;
     editingCarrito: CarritoConDetalles | null = null;
     carritoForm: FormGroup;
 
     constructor(
+        private usuarioService: UsuarioService,
         private carritoService: CarritoService,
         private facturaService: FacturaService,
         private productoService: ProductoService,
@@ -44,10 +47,14 @@ export class CarritoListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadCarritos();
-        // Cargar productos disponibles
+        // Para cargar productos disponibles
         const pagination = { page: 0, limit: 9999 };
         this.productoService.getProductos(pagination, {}).subscribe((resp: any) => {
             this.productos = resp?.data ?? [];
+        });
+        //Para cargar los usuarios disponibles, para asi poder buscarlos por el correo
+        this.usuarioService.getUsuarios(pagination, {}).subscribe((resp: any) => {
+            this.usuarios = resp?.data ?? [];
         });
     }
 
@@ -163,7 +170,7 @@ export class CarritoListComponent implements OnInit {
                 });
             });
         } else {
-            // === Crear carrito nuevo ===
+            // === Por si no hay detalles, se crea un carrito nuevo ===
             const newCarrito: CreateCarritoRequest = {
                 id_usuario: formValue.id_usuario,
                 activo: formValue.activo
@@ -188,7 +195,7 @@ export class CarritoListComponent implements OnInit {
         }
     }
 
-    // === Detalles ===
+    // === Pa agregar detalles ===
     agregarDetalle(): void {
         this.detalles.push(this.fb.group({
             id_producto: ['', Validators.required],
@@ -226,7 +233,7 @@ export class CarritoListComponent implements OnInit {
         detalleForm.patchValue({ subtotal: cantidad * precio }, { emitEvent: false });
     }
 
-    // === Carrito ===
+    // === Pa desactivar el carrito ===
     desactivarCarrito(carrito: CarritoConDetalles): void {
         this.carritoService.disableCarrito(carrito.id_carrito).subscribe({
             next: () => this.loadCarritos(),
