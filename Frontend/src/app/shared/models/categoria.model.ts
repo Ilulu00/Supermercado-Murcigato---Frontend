@@ -6,7 +6,7 @@ export interface Categoria {
   nombre_categoria: string;
   descripcion?: string;
   fecha_creacion: string;
-  fecha_edicion?: string;
+  fecha_actualizacion?: string;
 }
 
 /**
@@ -24,7 +24,7 @@ export interface CreateCategoriaRequest {
 export interface UpdateCategoriaRequest {
   nombre_categoria?: string;
   descripcion?: string;
-  fecha_edicion: string;
+  fecha_actualizacion: string;
 }
 
 /**

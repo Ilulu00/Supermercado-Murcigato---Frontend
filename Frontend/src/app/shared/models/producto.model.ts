@@ -35,7 +35,6 @@ export interface UpdateProductoRequest {
   precio_producto?: number;
   stock?: number;
   id_categoria?: string;
-  id_proveedor?: string;
   fecha_actualizacion: string;
 }
 
