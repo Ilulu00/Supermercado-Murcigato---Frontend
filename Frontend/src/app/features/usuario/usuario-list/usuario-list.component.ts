@@ -198,6 +198,7 @@ export class UsuarioListComponent implements OnInit {
       });
     }
   }
+  
 
 desactivarUsuario(usuario: Usuario): void {
   const nuevo_activo = !usuario.activo;
