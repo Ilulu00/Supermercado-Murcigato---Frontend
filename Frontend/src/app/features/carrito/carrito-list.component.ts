@@ -153,7 +153,7 @@ export class CarritoListComponent implements OnInit {
             if (pending === 0) { this.loadCarritos(); this.closeModal(); return; }
 
             detalles.forEach((det: any) => {
-                if (!det.id_detalle) {
+                if (!det.id_detalle || det.id_detalle.lenght < 10) {
                     // Crear detalle nuevo
                     const newDetalle = { id_carrito: carrito.id_carrito, id_producto: det.id_producto, cantidad: det.cantidad };
                     this.carritoService.createDetalle_carrito(newDetalle).subscribe({
@@ -241,17 +241,25 @@ export class CarritoListComponent implements OnInit {
         });
     }
 
-    pagarCarrito(carrito: CarritoConDetalles): void {
-        const metodo_pago = prompt('Ingrese su método de pago (Efectivo/Tarjeta):');
-        if (!metodo_pago) return;
+pagarCarrito(carrito: CarritoConDetalles): void {
+    const confirmar = confirm(`¿Estás seguro de que quieres pagar el carrito ${carrito.id_carrito}?`);
+    if (!confirmar) return;
 
-        this.facturaService.generateFactura({
-            id_carrito: carrito.id_carrito,
-            id_usuario: carrito.id_usuario,
-            metodo_pago
-        }).subscribe({
-            next: () => { this.loadCarritos(); alert('Factura generada correctamente.'); },
-            error: (err) => { console.log('Error generando factura: ', err); alert('No se pudo generar la factura.'); }
-        });
-    }
+    const metodo_pago = prompt('Ingrese su método de pago (Efectivo/Tarjeta):');
+    if (!metodo_pago) return;
+
+    this.facturaService.generateFactura({
+        id_carrito: carrito.id_carrito,
+        metodo_pago
+    }).subscribe({
+        next: () => { 
+            this.loadCarritos(); 
+            alert('Factura generada correctamente.'); 
+        },
+        error: (err) => { 
+            console.log('Error generando factura: ', err); 
+            alert('No se pudo generar la factura.'); 
+        }
+    });
+} 
 }

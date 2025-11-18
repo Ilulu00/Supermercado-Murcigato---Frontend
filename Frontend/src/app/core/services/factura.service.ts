@@ -4,7 +4,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-    CreateFactura,
     FacturaFilters,
     FacturaListResponse,
     RespuestaFactura
@@ -31,9 +30,10 @@ export class FacturaService {
         return this.apiService.get<FacturaListResponse>(this.facturaEndpoint, { params })
     }
 
-    generateFactura(factura: CreateFactura): Observable<RespuestaFactura> {
-        return this.apiService.post<RespuestaFactura>(this.facturaEndpoint, factura)
-    }
+    generateFactura(factura: { id_carrito: string, metodo_pago: string }): Observable<RespuestaFactura> {
+    return this.apiService.post<RespuestaFactura>(`${this.facturaEndpoint}/${factura.id_carrito}`, { metodo_pago: factura.metodo_pago });
+    }   
+
 
     disableFactura(id_factura: string): Observable<RespuestaFactura> {
         return this.apiService.patch<RespuestaFactura>(`${this.facturaEndpoint}/${id_factura}`, {activo : false})
