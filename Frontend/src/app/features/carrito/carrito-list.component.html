@@ -132,6 +132,19 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="carritoForm" (ngSubmit)="saveCarrito()">
+            <div class="row">
+              <div class="col-md-6"> 
+                <div class="form-group">
+                  <label for="id_usuario">Usuario *</label>
+                    <select class="form-control" id="id_usuario" formControlName="id_usuario" required>
+                      <option value="">
+                        Seleccione su usuario por medio de su correo </option>
+                          <option *ngFor="let u of usuarios" [value]="u.id_usuario">
+                            {{ u.correo }} | => {{ u.primer_nombre }} {{ u.primer_apellido }}</option>
+                    </select>
+                </div>
+              </div>
+            </div>
                 <div formArrayName="detalles">
                     <h5>Productos del carrito</h5>
 

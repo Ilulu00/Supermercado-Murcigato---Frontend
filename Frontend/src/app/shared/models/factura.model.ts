@@ -19,13 +19,11 @@ export interface RespuestaFactura {
     subtotal_total: number;
     descuento?: number;
     total: number;
-    fecha_creacion: string; // string porque llega como ISO
+    fecha_creacion: string; 
     detalles: DetalleFacturaRespuesta[];
 }
 
 export interface CreateFactura{
-    id_usuario: string;
-    id_carrito: string;
     metodo_pago: string;
 }
 
