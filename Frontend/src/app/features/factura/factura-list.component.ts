@@ -65,7 +65,7 @@ export class FacturaListComponent implements OnInit {
             this.fb.group({
                 id_producto: [det?.id_producto ?? ''],
                 cantidad: [det?.cantidad ?? 1],
-                precio_unitario: [det?.precio_unitario ?? 0],
+                precio_producto: [det?.precio_producto ?? 0],
                 subtotal: [det?.subtotal ?? 0],
             })
         );
