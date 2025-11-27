@@ -8,8 +8,8 @@ export interface Producto {
   stock: number;
   id_categoria: string; // UUID
   id_proveedor: string; // UUID
-  categoria?: { // Optional relationship data
-    nombre: string;
+  categoria: { // Optional relationship data
+    nombre_categoria: string;
   };
   fecha_creacion: string;
   fecha_actualizacion?: string;
@@ -35,6 +35,7 @@ export interface UpdateProductoRequest {
   precio_producto?: number;
   stock?: number;
   id_categoria?: string;
+  id_proveedor?: string;
   fecha_actualizacion: string;
 }
 

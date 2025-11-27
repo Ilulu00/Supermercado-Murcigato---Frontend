@@ -69,7 +69,7 @@ export class ProductoListComponent implements OnInit {
     this.proveedorService.getProveedores(pagination, {}).subscribe(
       resp => {
         this.proveedores = resp.data;
-        console.log('Proveedores cargados god: ', this.proveedores)
+        console.log('Proveedores cargados: ', this.proveedores)
       }
     )
   }
@@ -101,7 +101,7 @@ export class ProductoListComponent implements OnInit {
             id_categoria: '1',
             id_proveedor: '1',
             categoria: {
-              nombre: 'Mascotas'
+              nombre_categoria: 'Mascotas'
             },
             fecha_creacion: new Date().toISOString(),
             fecha_actualizacion: new Date().toISOString()
@@ -186,6 +186,7 @@ export class ProductoListComponent implements OnInit {
         precio_producto: this.productoForm.precio_producto,
         stock: this.productoForm.stock,
         id_categoria: this.productoForm.id_categoria,
+        id_proveedor: this.productoForm.id_proveedor,
         fecha_creacion: this.productoForm.fecha_creacion,
         fecha_actualizacion: this.productoForm.fecha_actualizacion
       };
